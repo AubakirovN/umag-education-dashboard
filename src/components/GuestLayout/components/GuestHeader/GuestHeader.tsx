@@ -1,0 +1,70 @@
+import {
+  Header,
+  Group,
+  Button,
+  Divider,
+  Box,
+  Burger,
+  Drawer,
+  ScrollArea,
+  rem,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useStyles } from "./styles.ts";
+import { Link } from "react-router-dom";
+import { Logo, LogoType } from "../../../Logo/Logo.tsx";
+
+export function GuestHeader() {
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const { classes, theme } = useStyles();
+
+  return (
+    <Box pb={120}>
+      <Header height={60} px="md">
+        <Group position="apart" sx={{ height: "100%" }}>
+          <Link to={"/"}>
+            <Logo type={LogoType.dark} />
+          </Link>
+
+          <Group className={classes.hiddenMobile}>
+            <Link to={"/login"}>
+              <Button variant="default">Войти</Button>
+            </Link>
+            <Button>Регистрация</Button>
+          </Group>
+
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            className={classes.hiddenDesktop}
+          />
+        </Group>
+      </Header>
+
+      <Drawer
+        opened={drawerOpened}
+        onClose={closeDrawer}
+        size="100%"
+        padding="md"
+        title="Меню"
+        className={classes.hiddenDesktop}
+        zIndex={1000000}
+      >
+        <ScrollArea h={`calc(100vh - ${rem(60)})`} mx="-md">
+          <Divider
+            my="sm"
+            color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
+          />
+
+          <Group position="center" grow pb="xl" px="md">
+            <Link to={"/login"}>
+              <Button variant="default">Войти</Button>
+            </Link>
+            <Button>Регистрация</Button>
+          </Group>
+        </ScrollArea>
+      </Drawer>
+    </Box>
+  );
+}
