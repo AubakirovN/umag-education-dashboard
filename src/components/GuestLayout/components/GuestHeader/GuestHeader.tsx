@@ -11,10 +11,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useStyles } from "./styles.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Logo, LogoType } from "../../../Logo/Logo.tsx";
 
 export function GuestHeader() {
+  const navigate = useNavigate();
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const { classes, theme } = useStyles();
@@ -28,10 +29,10 @@ export function GuestHeader() {
           </Link>
 
           <Group className={classes.hiddenMobile}>
-            <Link to={"/login"}>
+            <Link to={"/auth/login"}>
               <Button variant="default">Войти</Button>
             </Link>
-            <Button>Регистрация</Button>
+            <Button onClick={() => navigate('/auth/register')}>Регистрация</Button>
           </Group>
 
           <Burger
