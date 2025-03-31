@@ -1,7 +1,7 @@
-import { getFullName } from "@/core/utils/getFullName";
-import { getAppointmentServiceInfo } from "@/core/utils/getAppointmentServiceInfo";
+// import { getFullName } from "@/core/utils/getFullName";
+// import { getAppointmentServiceInfo } from "@/core/utils/getAppointmentServiceInfo";
 import { EventHoveringArg } from "@fullcalendar/core/index.js";
-import { Dictionary } from "@fullcalendar/core/internal";
+// import { Dictionary } from "@fullcalendar/core/internal";
 import { Flex, createStyles } from "@mantine/core";
 
 interface CalendarHoverItemProps {
@@ -23,16 +23,17 @@ const useStyles = createStyles(() => ({
 export const CalendarHoverItem = ({ hoveredItem }: CalendarHoverItemProps) => {
   const { classes } = useStyles();
   if (hoveredItem && hoveredItem?.event.display !== "background") {
-    const appointment: Dictionary = hoveredItem.event.extendedProps;
-    const doctorFullName = getFullName(appointment?.employee);
+    // const appointment: Dictionary = hoveredItem.event.extendedProps;
+    // const doctorFullName = getFullName(appointment?.employee);
     return (
       <Flex
         className={classes.hoverItem}
         left={hoveredItem.jsEvent.pageX + 5}
         top={hoveredItem.jsEvent.pageY + 5}
       >
-        <div>{doctorFullName}</div>
-        <div>{getAppointmentServiceInfo(appointment)}</div>
+        <div></div>
+        {/* <div>{doctorFullName}</div> */}
+        {/* <div>{getAppointmentServiceInfo(appointment)}</div> */}
       </Flex>
     );
   }

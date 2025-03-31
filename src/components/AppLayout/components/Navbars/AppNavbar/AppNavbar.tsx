@@ -1,30 +1,31 @@
 import { useCallback } from "react";
 import {
   ActionIcon,
-  Flex,
+  // Flex,
   Menu,
   Navbar,
   ScrollArea,
   Stack,
-  Text,
+  // Text,
 } from "@mantine/core";
 import { useStyles } from "../styles.ts";
 import { appNavbarCategories } from "./links.ts";
 import { LinksGroup } from "../../NavbarLinksGroup/index.ts";
 import { UserButton } from "../../UserButton/index.ts";
 import {
-  IconArrowsLeftRight,
-  IconCheck,
+  // IconArrowsLeftRight,
+  // IconCheck,
   IconChevronLeft,
   IconLogout,
-  IconPhoto,
-  IconTrash,
+  // IconPhoto,
+  // IconTrash,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../../LanguageSwitcher/LanguageSwitcher.tsx";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store.ts";
+import { useDispatch } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
+// import { RootState } from "@/store.ts";
 import { resetAll } from "@/slice/resetAction.tsx";
 import { toggleAppNavbar } from "@/slice/settingsSlice/settingsSlice.tsx";
 
@@ -33,7 +34,7 @@ export function AppNavbar() {
   const { classes } = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => state.user.currentUser);
+  // const user = useSelector((state: RootState) => state.user.currentUser);
 
   const getLinks = () => {
     // if (curPermission?.id) {

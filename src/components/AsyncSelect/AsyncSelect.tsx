@@ -1,4 +1,4 @@
-import { getColorsByIndex } from "@/core/utils/getColors";
+// import { getColorsByIndex } from "@/core/utils/getColors";
 import { Text, createStyles } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { AsyncPaginate } from "react-select-async-paginate";
@@ -32,7 +32,7 @@ interface AsyncSelectProps {
   isMulti?: boolean;
   value?: any;
   cacheUniqs?: any[];
-  colored?: boolean;
+  // colored?: boolean;
   disabled?: boolean;
 }
 
@@ -49,7 +49,7 @@ export const AsyncSelect = ({
   label,
   onChange,
   isMulti,
-  colored,
+  // colored,
   disabled,
   loadOptions,
   handleSearchChange,
@@ -67,10 +67,10 @@ export const AsyncSelect = ({
       width: w ? w : "250px",
       zIndex: 205,
     }),
-    multiValue: (base: any, { index }: { index: number }) => ({
-      ...base,
-      backgroundColor: colored ? getColorsByIndex(index) : "#ccc",
-    }),
+    // multiValue: (base: any, { index }: { index: number }) => ({
+    //   ...base,
+    //   backgroundColor: colored ? getColorsByIndex(index) : "#ccc",
+    // }),
     control: (provided: any) => ({
       ...provided,
       width: w ? w : "250px",

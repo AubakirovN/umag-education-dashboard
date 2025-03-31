@@ -1,15 +1,11 @@
-import { Anchor, Paper, Title, Text, Container, Alert } from "@mantine/core";
+import { Paper, Title, Container, Alert } from "@mantine/core";
 
-import { LoginForm } from "../../components/LoginForm";
 import { useTranslation } from "react-i18next";
-import { getUserInfo, login, register } from "@/core/api";
+import { register } from "@/core/api";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { IconAlertCircleFilled } from "@tabler/icons-react";
-import { setUser } from "@/slice/userSlice";
-import { useDispatch, useSelector } from "react-redux";
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
-import { RootState } from "@/store";
 import { RegisterDto } from "@/core/types";
 import { RegisterForm } from "../../components/RegisterForm";
 

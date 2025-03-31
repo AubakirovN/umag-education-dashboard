@@ -1,14 +1,14 @@
 import {
-  IconBinaryTree,
+  // IconBinaryTree,
   IconBuilding,
-  IconBuildingHospital,
-  IconCalendarTime,
-  IconChartLine,
-  IconDoor,
+  // IconBuildingHospital,
+  // IconCalendarTime,
+  // IconChartLine,
+  // IconDoor,
   IconHome2,
-  IconShoppingCart,
-  IconUser,
-  IconUserCircle,
+  // IconShoppingCart,
+  // IconUser,
+  // IconUserCircle,
   TablerIconsProps,
 } from "@tabler/icons-react";
 

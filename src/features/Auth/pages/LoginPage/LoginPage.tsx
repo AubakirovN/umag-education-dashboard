@@ -1,21 +1,19 @@
-import { Anchor, Paper, Title, Text, Container, Alert } from "@mantine/core";
+import { Paper, Title, Container, Alert } from "@mantine/core";
 
 import { LoginForm } from "../../components/LoginForm";
 import { useTranslation } from "react-i18next";
-import { getUserInfo, login } from "@/core/api";
-import { useNavigate } from "react-router-dom";
+import { login } from "@/core/api";
+// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { IconAlertCircleFilled } from "@tabler/icons-react";
-import { setUser } from "@/slice/userSlice";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
-import { RootState } from "@/store";
 import { LoginDto } from "@/core/types";
 
 export function LoginPage() {
   const { t } = useTranslation("auth");
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [err, setErr] = useState(false);
 

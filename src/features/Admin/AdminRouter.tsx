@@ -1,4 +1,5 @@
-import { Route, Routes } from "react-router-dom";
+import { Routes } from "react-router-dom";
+// import { Route, Routes } from "react-router-dom";
 // import { PatientPage } from "../ClinicBooking/pages/PatientPage/PatientPage.tsx";
 
 export const AdminRouter = () => {

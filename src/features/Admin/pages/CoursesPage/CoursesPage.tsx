@@ -1,6 +1,5 @@
 import { Anchor, Breadcrumbs, Stack, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { Users } from "../../components/Users";
 import { Courses } from "../../components/Courses";
 
 const CoursesPage = () => {

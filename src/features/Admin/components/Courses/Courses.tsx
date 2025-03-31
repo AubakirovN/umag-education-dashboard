@@ -2,7 +2,7 @@ import { getCourses } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
-  MRT_PaginationState,
+  // MRT_PaginationState,
   MantineReactTable,
   useMantineReactTable,
 } from "mantine-react-table";
@@ -18,6 +18,8 @@ export const Courses = () => {
   const [modal, setModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => courses || [], [courses]);
+
+  console.log(setIsLoading)
 
   const getData = async () => {
     const response = await getCourses();
@@ -46,7 +48,7 @@ export const Courses = () => {
           accessorFn: (row) =>
             row?.deadline ? formatDMYHM(row.deadline) : "-",
         },
-      ] || [],
+      ],
     [t]
   );
 
