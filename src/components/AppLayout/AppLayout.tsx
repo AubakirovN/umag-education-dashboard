@@ -12,11 +12,11 @@ export function AppLayout() {
   const token = localStorage.getItem("accessToken");
   const isNavOpened = useSelector((state: RootState) => state.settings.appNavbar);
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate, token]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     navigate("/login");
+  //   }
+  // }, [navigate, token]);
 
   return (
     <AppShell navbar={isNavOpened ? <AppNavbar /> : <EmptyNavbar />}>

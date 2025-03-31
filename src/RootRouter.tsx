@@ -9,11 +9,12 @@ import { AppLayout } from "./components/AppLayout";
 import { LandingPage } from "./features/Landing/pages/LandingPage";
 import { GuestLayout } from "./components/GuestLayout";
 
-import { AdminRouter } from "./features/Admin/AdminRouter.tsx";
 import { HomeRedirectPage } from "./features/Landing/pages/HomeRedirectPage";
 import { ErrorPage } from "./features/Error/pages";
 import { AuthRouter } from "./features/Auth/AuthRouter.tsx";
 import HomePage from "./features/Admin/pages/HomePage/HomePage.tsx";
+import UsersPage from "./features/Admin/pages/UsersPage/UsersPage.tsx";
+import CoursesPage from "./features/Admin/pages/CoursesPage/CoursesPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     element: <GuestLayout />,
     children: [
       { path: "/", element: <LandingPage /> },
-      { path: "login/*", element: <AuthRouter /> },
+      { path: "auth/*", element: <AuthRouter /> },
     ],
   },
   {
@@ -30,7 +31,9 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <HomeRedirectPage /> },
       { path: "home", element: <HomePage /> },
-      { path: "admin/*", element: <AdminRouter /> },
+      { path: "users", element: <UsersPage /> },
+      { path: "courses", element: <CoursesPage /> },
+      // { path: "admin/*", element: <AdminRouter /> },
     ],
   },
   {

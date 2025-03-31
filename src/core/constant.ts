@@ -1,2 +1,2 @@
 export const baseUrl =
-  import.meta.env.VITE_API_BASE_URL || "https://umag.kz/api";
+  import.meta.env.VITE_API_BASE_URL || "https://edu-backend.umag.kz/api";

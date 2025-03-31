@@ -3,9 +3,13 @@ export type LoginDto = {
   email: string;
   password: string;
 };
-export type SetPasswordDto = {
-  iin: string;
+export type RegisterDto = {
+  name: string;
+  email: string;
   password: string;
-  passwordRepeat: string;
+  phone: string;
 };
-
+export type AddUserDto = {
+  phone: string;
+  role: string;
+}

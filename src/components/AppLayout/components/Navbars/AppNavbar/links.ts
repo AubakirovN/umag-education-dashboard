@@ -26,40 +26,45 @@ export type AppNavbarCategory = {
 
 export const appNavbarCategories: AppNavbarCategory[] = [
   {
-    translationKey: "appNavbar.main",
+    translationKey: "appNavbar.users",
     icon: IconHome2,
-    link: "/app/home",
+    link: "/app/users",
   },
   {
-    translationKey: "appNavbar.personnel",
-    icon: IconUser,
-    link: "/app/admin/personnel",
-  },
-  {
-    translationKey: "appNavbar.holdings",
+    translationKey: "appNavbar.courses",
     icon: IconBuilding,
-    link: "/app/admin/holdings",
+    link: "/app/courses",
   },
-  {
-    translationKey: "appNavbar.medCenters",
-    icon: IconBuildingHospital,
-    link: "/app/admin/clinics",
-  },
-  {
-    translationKey: "appNavbar.departments",
-    icon: IconBinaryTree,
-    link: "/app/admin/departments",
-  },
-  {
-    translationKey: "appNavbar.cabinets",
-    icon: IconDoor,
-    link: "/app/admin/cabinets",
-  },
-  {
-    translationKey: "appNavbar.petOwners",
-    icon: IconUserCircle,
-    link: "/app/admin/pet-owners",
-  },
+  // {
+  //   translationKey: "appNavbar.personnel",
+  //   icon: IconUser,
+  //   link: "/app/admin/personnel",
+  // },
+  // {
+  //   translationKey: "appNavbar.holdings",
+  //   icon: IconBuilding,
+  //   link: "/app/admin/holdings",
+  // },
+  // {
+  //   translationKey: "appNavbar.medCenters",
+  //   icon: IconBuildingHospital,
+  //   link: "/app/admin/clinics",
+  // },
+  // {
+  //   translationKey: "appNavbar.departments",
+  //   icon: IconBinaryTree,
+  //   link: "/app/admin/departments",
+  // },
+  // {
+  //   translationKey: "appNavbar.cabinets",
+  //   icon: IconDoor,
+  //   link: "/app/admin/cabinets",
+  // },
+  // {
+  //   translationKey: "appNavbar.petOwners",
+  //   icon: IconUserCircle,
+  //   link: "/app/admin/pet-owners",
+  // },
 ];
 
 export const linksMockdata = [

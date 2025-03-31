@@ -1,6 +1,7 @@
 {
   "switchLanguage": "Сменить язык",
   "appNavbar": {
+    "users": "Пользователи",
     "userInfo": {
       "menu": {
         "loginAs": "Войти как",
@@ -8,6 +9,7 @@
         "directory": "Справочник"
       }
     },
+    "courses": "Курсы",
     "statistics": "Статистика",
     "main": "Главная",
     "settings": {
@@ -18,8 +20,32 @@
       "hide": "Скрыть"
     }
   },
+  "users": {
+    "addModal": {
+      "title": "Добавление пользователя",
+      "phone": "Номер телефона",
+      "role": "Роль",
+      "chooseRole": "Выберите роль"
+    }
+  },
+  "courses": {
+    "courseCreate": "Создать курс",
+    "modal": {
+      "courseCreating": "Создание курса",
+      "title": "Название курса",
+      "enterTitle": "Введите название",
+      "description": "Описание курса",
+      "enterDescription": "Введите описание",
+      "deadline": "Срок",
+      "enterDeadline": "Выберите срок завершения"
+    },
+    "table": {
+      "title": "Название",
+      "deadline": "Срок"
+    }
+  },
   "errors": {
-    "errorCode": "Код ошибки ",
+    "errorCode": "Возникла ошибка",
     "code404": "Код ошибки 404.",
     "text404": "Скорее всего такой страницы не существует. Попробуйте перейти ",
     "code400": "Код ошибки 400.",
@@ -50,7 +76,8 @@
   },
   "breadcrumbs": {
     "admin": "Администрирование",
-    "main": "Главная"
+    "main": "Главная",
+    "courses": "Курсы"
   },
   "buttons": {
     "add": "Добавить",

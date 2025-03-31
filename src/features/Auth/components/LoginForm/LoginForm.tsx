@@ -1,8 +1,7 @@
 import { LoginDto } from "@/core/types";
-import { Anchor, Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import { Button, PasswordInput, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 export interface LoginFormProps {
   onSubmit: (values: LoginDto) => void;
@@ -10,7 +9,6 @@ export interface LoginFormProps {
 
 export function LoginForm({ onSubmit }: LoginFormProps) {
   const { t } = useTranslation("auth");
-  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
@@ -22,7 +20,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       email: (value) => {
         if (value) {
           if (!/^\S+@\S+$/.test(value)) {
-            return t("form.validate.email");
+            return t("loginForm.errors.email");
           } else {
             return null;
           }
@@ -47,8 +45,8 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       })}
     >
       <TextInput
-        label="Почта"
-        placeholder="Введите почту"
+        label={t("loginForm.email")}
+        placeholder={t("loginForm.enterEmail")}
         {...form.getInputProps("email")}
       />
       <PasswordInput
@@ -58,12 +56,6 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         withAsterisk
         {...form.getInputProps("password")}
       />
-      {/* <Group position="apart" mt="lg">
-        <Anchor component="button" size="sm" onClick={() => navigate("new")}>
-          {t("loginForm.firstEntry")}
-        </Anchor>
-      </Group> */}
-
       <Button type="submit" fullWidth mt="md">
         {t("loginForm.submitButton")}
       </Button>

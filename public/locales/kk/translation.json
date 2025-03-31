@@ -1,6 +1,7 @@
 {
   "switchLanguage": "Сменить язык",
   "appNavbar": {
+    "users": "Пользователи",
     "userInfo": {
       "menu": {
         "loginAs": "Войти как",

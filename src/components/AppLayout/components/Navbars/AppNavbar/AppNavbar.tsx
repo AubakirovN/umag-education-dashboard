@@ -35,27 +35,27 @@ export function AppNavbar() {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.currentUser);
 
-  // const getLinks = () => {
-  //   if (curPermission?.id) {
-  //     return appNavbarCategories
-  //       .filter((link) =>
-  //         link.permission.some(
-  //           (item) =>
-  //             item.entityName === curPermission.entityName &&
-  //             item.level === curPermission.level
-  //         )
-  //       )
-  //       .map((item) => <LinksGroup {...item} key={item.translationKey} />);
-  //   } else {
-  //     return appNavbarCategories.map((item) => (
-  //       <LinksGroup {...item} key={item.translationKey} />
-  //     ));
-  //   }
-  // };
+  const getLinks = () => {
+    // if (curPermission?.id) {
+    //   return appNavbarCategories
+    //     .filter((link) =>
+    //       link.permission.some(
+    //         (item) =>
+    //           item.entityName === curPermission.entityName &&
+    //           item.level === curPermission.level
+    //       )
+    //     )
+    //     .map((item) => <LinksGroup {...item} key={item.translationKey} />);
+    // } else {
+      return appNavbarCategories.map((item) => (
+        <LinksGroup {...item} key={item.translationKey} />
+      ));
+    // }
+  };
   const logout = () => {
     localStorage.removeItem("accessToken");
     dispatch(resetAll());
-    navigate("/login");
+    navigate("/auth/login");
   };
 
   const handleLogout = useCallback(
@@ -100,9 +100,9 @@ export function AppNavbar() {
         </Menu>
       </Navbar.Section>
 
-      {/* <Navbar.Section grow className={classes.links} component={ScrollArea}>
+      <Navbar.Section grow className={classes.links} component={ScrollArea}>
         <div className={classes.linksInner}>{getLinks()}</div>
-      </Navbar.Section> */}
+      </Navbar.Section>
 
       <Navbar.Section className={classes.footer} p="md">
         <LanguageSwitcher />

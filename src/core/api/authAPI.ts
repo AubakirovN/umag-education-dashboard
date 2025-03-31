@@ -1,13 +1,13 @@
 import {
   LoginDto,
-  SetPasswordDto,
+  RegisterDto,
 } from "@/core/types";
 import axios from "axios";
 import { baseUrl } from "../constant";
 
 export const login = async (body: LoginDto): Promise<any> => {
   const response = await axios.post<any>(
-    `${baseUrl}/auth/login`,
+    `${baseUrl}/login`,
     body
   );
   return response.data;
@@ -18,11 +18,11 @@ export const getUserInfo = async (): Promise<any> => {
   return response.data;
 };
 
-export const setPassword = async (
-  body: SetPasswordDto
+export const register = async (
+  body: RegisterDto
 ): Promise<any> => {
   const response = await axios.post<any>(
-    `${baseUrl}/auth/set-password`,
+    `${baseUrl}/register`,
     body
   );
   return response.data;
