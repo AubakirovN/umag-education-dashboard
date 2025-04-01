@@ -15,6 +15,9 @@ import { AuthRouter } from "./features/Auth/AuthRouter.tsx";
 import HomePage from "./features/Admin/pages/HomePage/HomePage.tsx";
 import UsersPage from "./features/Admin/pages/UsersPage/UsersPage.tsx";
 import CoursesPage from "./features/Admin/pages/CoursesPage/CoursesPage.tsx";
+// import BlocksPage from "./features/Admin/pages/BlocksPage/BlocksPage.tsx";
+import CoursePage from "./features/Admin/pages/CoursePage/CoursePage.tsx";
+import BlockPage from "./features/Admin/pages/BlockPage/BlockPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +36,9 @@ const router = createBrowserRouter([
       { path: "home", element: <HomePage /> },
       { path: "users", element: <UsersPage /> },
       { path: "courses", element: <CoursesPage /> },
+      { path: "courses/:id", element: <CoursePage /> },
+      { path: "blocks/:id", element: <BlockPage /> },
+      // { path: "blocks", element: <BlocksPage /> },
       // { path: "admin/*", element: <AdminRouter /> },
     ],
   },

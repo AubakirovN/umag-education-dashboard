@@ -19,7 +19,7 @@ export function RegisterPage() {
     setIsLoading(true);
     try {
       await register(values);
-      navigate("/");
+      navigate("/auth/login");
       setErr(false);
     } catch (e) {
       console.log(e);

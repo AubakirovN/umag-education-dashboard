@@ -14,8 +14,8 @@ const CoursesPage = () => {
   ));
   return (
     <Stack>
-      <Title order={1}>{t("appNavbar.courses")}</Title>
       <Breadcrumbs>{items}</Breadcrumbs>
+      <Title order={1}>{t("appNavbar.courses")}</Title>
       <Courses />
     </Stack>
   );

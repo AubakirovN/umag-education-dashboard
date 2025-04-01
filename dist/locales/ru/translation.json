@@ -10,6 +10,8 @@
       }
     },
     "courses": "Курсы",
+    "blocks": "Блоки",
+    "lessons": "Уроки",
     "statistics": "Статистика",
     "main": "Главная",
     "settings": {
@@ -42,6 +44,36 @@
     "table": {
       "title": "Название",
       "deadline": "Срок"
+    }
+  },
+  "blocks": {
+    "blockCreate": "Создать блок",
+    "table": {
+      "title": "Название блока",
+      "number": "Количество блоков",
+      "maxAttempts": "Максимальное количество попыток",
+      "passCount": "Количество попыток"
+    },
+    "modal": {
+      "blockCreating": "Создание блока",
+      "title": "Название блока",
+      "enterTitle": "Введите название",
+      "description": "Описание блока",
+      "enterDescription": "Введите описание",
+      "number": "Количество блоков",
+      "enterNumber": "Введите количество",
+      "course": "Курс",
+      "chooseCourse": "Выберите курс",
+      "maxAttempts": "Максимальное количество попыток",
+      "enterMaxAttempts": "Введите количество попыток",
+      "passCount": "Количество попыток",
+      "enterPassCount": "Введите количество"
+    }
+  },
+  "lessons": {
+    "lessonCreate": "Создать урок",
+    "modal": {
+      "lessonCreating": "Создание урока"
     }
   },
   "errors": {
@@ -77,7 +109,10 @@
   "breadcrumbs": {
     "admin": "Администрирование",
     "main": "Главная",
-    "courses": "Курсы"
+    "users": "Пользователи",
+    "courses": "Курсы",
+    "blocks": "Блоки",
+    "lessons": "Уроки"
   },
   "buttons": {
     "add": "Добавить",

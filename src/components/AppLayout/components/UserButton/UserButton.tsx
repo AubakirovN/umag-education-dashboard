@@ -27,7 +27,8 @@ const useStyles = createStyles((theme) => ({
 interface UserButtonProps extends UnstyledButtonProps {
   image: string;
   name: string;
-  phoneNumber?: string;
+  role: string;
+  phone?: string;
   email?: string;
   number?: string;
   icon?: React.ReactNode;
@@ -36,11 +37,14 @@ interface UserButtonProps extends UnstyledButtonProps {
 export function UserButton({
   image,
   name,
+  email,
+  phone,
+  role,
   icon,
   ...others
 }: UserButtonProps) {
   const { classes } = useStyles();
-  
+
   return (
     <UnstyledButton className={classes.user} {...others}>
       <Group>
@@ -51,10 +55,10 @@ export function UserButton({
             {name || ""}
           </Text>
           <Text color="dimmed" size="xs" weight={500}>
-            Admin
+            {phone}
           </Text>
           <Text color="dimmed" size="xs" weight={500}>
-            Test
+            {role}
           </Text>
         </div>
         {icon || <IconChevronRight size="0.9rem" stroke={1.5} />}

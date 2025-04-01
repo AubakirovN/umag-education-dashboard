@@ -1,8 +1,7 @@
-import { getCourses } from "@/core/api";
+import { getCourseBlocks } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
-  // MRT_PaginationState,
   MantineReactTable,
   useMantineReactTable,
 } from "mantine-react-table";
@@ -10,25 +9,29 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AddCourseModal } from "./AddCourseModal";
-import { formatDMYHM } from "@/core/format";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { AddBlockModal } from "./AddBlockModal";
 
-export const Courses = () => {
+export const Course = () => {
+  const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [blocks, setBlocks] = useState([]);
   const [modal, setModal] = useState(false);
   const [changes, setChanges] = useState(false);
-  const data: any[] = useMemo(() => courses || [], [courses]);
-
-  console.log(setIsLoading);
+  const data: any[] = useMemo(() => blocks || [], [blocks]);
 
   const getData = async () => {
-    const response = await getCourses();
-    setCourses(response.data);
-    console.log(response);
+    setIsLoading(true);
+    try {
+      const response = await getCourseBlocks(id as string);
+      setBlocks(response.data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -42,14 +45,14 @@ export const Courses = () => {
         accessorKey: "id",
       },
       {
-        header: t("courses.table.title"),
+        header: t("blocks.table.title"),
         accessorKey: "title",
         Cell: ({ cell }) => {
           return (
             <Button
               p={0}
               variant="subtle"
-              onClick={() => navigate(`${cell.row.original?.id}`)}
+              onClick={() => navigate(`/app/blocks/${cell.row.original?.id}`)}
             >
               {cell.row.original.title}
             </Button>
@@ -57,8 +60,16 @@ export const Courses = () => {
         },
       },
       {
-        header: t("courses.table.deadline"),
-        accessorFn: (row) => (row?.deadline ? formatDMYHM(row.deadline) : "-"),
+        header: t("blocks.table.number"),
+        accessorKey: "number",
+      },
+      {
+        header: t("blocks.table.maxAttempts"),
+        accessorKey: "max_attempts",
+      },
+      {
+        header: t("blocks.table.passCount"),
+        accessorKey: "pass_count",
       },
     ],
     [t]
@@ -89,7 +100,7 @@ export const Courses = () => {
       return (
         <div style={{ display: "flex", gap: "8px" }}>
           <Button onClick={() => openModal()} variant="filled">
-            {t("courses.courseCreate")}
+            {t("blocks.blockCreate")}
           </Button>
         </div>
       );
@@ -98,7 +109,7 @@ export const Courses = () => {
   return (
     <>
       <MantineReactTable table={table} />
-      <AddCourseModal
+      <AddBlockModal
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}

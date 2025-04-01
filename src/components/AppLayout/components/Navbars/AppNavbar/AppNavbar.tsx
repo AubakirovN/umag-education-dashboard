@@ -23,9 +23,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "../../LanguageSwitcher/LanguageSwitcher.tsx";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-// import { useDispatch, useSelector } from "react-redux";
-// import { RootState } from "@/store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store.ts";
 import { resetAll } from "@/slice/resetAction.tsx";
 import { toggleAppNavbar } from "@/slice/settingsSlice/settingsSlice.tsx";
 
@@ -34,7 +33,7 @@ export function AppNavbar() {
   const { classes } = useStyles();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const user = useSelector((state: RootState) => state.user.currentUser);
+  const user = useSelector((state: RootState) => state.user.currentUser);
 
   const getLinks = () => {
     // if (curPermission?.id) {
@@ -92,9 +91,10 @@ export function AppNavbar() {
             <Stack>
               <UserButton
                 image="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
-                name='Admin'
-                // email={user?.email}
-                // phoneNumber={user?.phoneNumber}
+                name={user?.name}
+                email={user?.email}
+                phone={user?.phone}
+                role={user?.role}
               />
             </Stack>
           </Menu.Target>

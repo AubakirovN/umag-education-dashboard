@@ -4,6 +4,7 @@ import { AddUserModal } from "./AddUserModal";
 
 export const Users = () => {
   const [addModal, setAddModal] = useState(false);
+  
   return (
     <>
       <Flex justify="flex-end">

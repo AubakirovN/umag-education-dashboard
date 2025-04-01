@@ -6,6 +6,7 @@ const UsersPage = () => {
   const { t } = useTranslation();
   const items = [
     { title: t("breadcrumbs.main"), href: "/app" },
+    { title: t("breadcrumbs.users"), href: "/app/users" },
   ].map((item, index) => (
     <Anchor href={item.href} key={index}>
       {item.title}
@@ -13,8 +14,8 @@ const UsersPage = () => {
   ));
   return (
     <Stack>
-      <Title order={1}>{t("appNavbar.users")}</Title>
       <Breadcrumbs>{items}</Breadcrumbs>
+      <Title order={1}>{t("appNavbar.users")}</Title>
       <Users />
     </Stack>
   );

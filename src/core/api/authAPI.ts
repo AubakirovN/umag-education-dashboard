@@ -14,7 +14,7 @@ export const login = async (body: LoginDto): Promise<any> => {
 };
 
 export const getUserInfo = async (): Promise<any> => {
-  const response = await axios.get<any>(`${baseUrl}/auth/me`);
+  const response = await axios.get<any>(`${baseUrl}/user`);
   return response.data;
 };
 

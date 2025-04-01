@@ -1,6 +1,6 @@
 import {
-  // IconBinaryTree,
-  IconBuilding,
+  IconBinaryTree,
+  // IconBuilding,
   // IconBuildingHospital,
   // IconCalendarTime,
   // IconChartLine,
@@ -32,13 +32,13 @@ export const appNavbarCategories: AppNavbarCategory[] = [
   },
   {
     translationKey: "appNavbar.courses",
-    icon: IconBuilding,
+    icon: IconBinaryTree,
     link: "/app/courses",
   },
   // {
-  //   translationKey: "appNavbar.personnel",
-  //   icon: IconUser,
-  //   link: "/app/admin/personnel",
+  //   translationKey: "appNavbar.blocks",
+  //   icon: IconBuilding,
+  //   link: "/app/blocks",
   // },
   // {
   //   translationKey: "appNavbar.holdings",

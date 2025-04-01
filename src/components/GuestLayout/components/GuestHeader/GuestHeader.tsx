@@ -32,7 +32,9 @@ export function GuestHeader() {
             <Link to={"/auth/login"}>
               <Button variant="default">Войти</Button>
             </Link>
-            <Button onClick={() => navigate('/auth/register')}>Регистрация</Button>
+            <Button onClick={() => navigate("/auth/register")}>
+              Регистрация
+            </Button>
           </Group>
 
           <Burger
@@ -59,10 +61,12 @@ export function GuestHeader() {
           />
 
           <Group position="center" grow pb="xl" px="md">
-            <Link to={"/login"}>
+            <Link to={"/auth/login"}>
               <Button variant="default">Войти</Button>
             </Link>
-            <Button>Регистрация</Button>
+            <Button onClick={() => navigate("/auth/register")}>
+              Регистрация
+            </Button>
           </Group>
         </ScrollArea>
       </Drawer>

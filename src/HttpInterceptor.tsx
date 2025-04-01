@@ -15,10 +15,10 @@ export const HttpInterceptor: React.FC<HttpInterceptorProps> = ({
   useEffect(() => {
     axios.interceptors.request.use(
       (config) => {
-        // const token = localStorage.getItem("accessToken");
-        // if (token) {
-        //   config.headers.Authorization = `Bearer ${token}`;
-        // }
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
       },
       (error) => {
@@ -45,38 +45,6 @@ export const HttpInterceptor: React.FC<HttpInterceptorProps> = ({
             color: "red",
           });
         }
-        // } else if (
-        //   error.response?.status === 4040 ||
-        //   error.response?.status === 4000
-        // ) {
-        //   window.location.pathname = `/${error.response.status}/error`;
-        //   return Promise.reject(error);
-        // } else if (
-        //   error.response?.status === 500 ||
-        //   error.response?.status === 502 ||
-        //   error.response?.status === 503
-        // ) {
-        //   notifications.show({
-        //     title: `${t("errors.errorCode")} ${error.response?.status}.`,
-        //     message: t("errors.text50X"),
-        //     color: "red",
-        //   });
-        //   return Promise.reject(error);
-        // } else if (error.response?.status === 504) {
-        //   notifications.show({
-        //     title: `${t("errors.errorCode")} ${error.response?.status}.`,
-        //     message: t("errors.text504"),
-        //     color: "red",
-        //   });
-        //   return Promise.reject(error);
-        // } else if (error.response?.status === 422 || error.response?.status === 409) {
-        //   notifications.show({
-        //     title: `${t("errors.errorCode")} ${error.response?.status}.`,
-        //     message: error.response?.data?.message,
-        //     color: "red",
-        //   });
-        // }
-
         return Promise.reject(error);
       }
     );

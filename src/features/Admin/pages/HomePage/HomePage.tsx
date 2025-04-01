@@ -13,8 +13,8 @@ const HomePage = () => {
   ));
   return (
     <Stack>
-      <Title order={1}>{t("breadcrumbs.main")}</Title>
       <Breadcrumbs>{items}</Breadcrumbs>
+      <Title order={1}>{t("breadcrumbs.main")}</Title>
       <div>Home Page</div>
     </Stack>
   );

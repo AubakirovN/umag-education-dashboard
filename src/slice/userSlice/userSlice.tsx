@@ -1,12 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { resetAll } from "../resetAction";
+import { User } from "@/core/types";
 
 interface UserState {
-  currentUser: string;
+  currentUser: User;
 }
 
 const initialState: UserState = {
-  currentUser: ''
+  currentUser: {
+    id: '',
+    name: '',
+    phone: '',
+    email: '',
+    role: '',
+    created_at: '',
+    updated_at: ''
+  }
 };
 
 const userSlice = createSlice({
