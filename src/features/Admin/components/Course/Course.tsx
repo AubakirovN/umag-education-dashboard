@@ -1,7 +1,8 @@
-import { getCourseBlocks } from "@/core/api";
+import { deleteCourseBlock, getCourseBlocks } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
+  MRT_PaginationState,
   MantineReactTable,
   useMantineReactTable,
 } from "mantine-react-table";
@@ -11,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddBlockModal } from "./AddBlockModal";
+import { IconTrashFilled } from "@tabler/icons-react";
 
 export const Course = () => {
   const { id } = useParams();
@@ -21,12 +23,34 @@ export const Course = () => {
   const [modal, setModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => blocks || [], [blocks]);
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
+  const [totalRowCount, setTotalRowCount] = useState(0);
 
   const getData = async () => {
     setIsLoading(true);
+    const params = {
+      page: pagination.pageIndex + 1,
+      perPage: pagination.pageSize,
+    };
     try {
-      const response = await getCourseBlocks(id as string);
-      setBlocks(response.data);
+      const response = await getCourseBlocks(id as string, params);
+      setBlocks(response?.data);
+      setTotalRowCount(response?.total);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteData = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await deleteCourseBlock(id);
+      setChanges((prev) => !prev);
     } catch (e) {
       console.error(e);
     } finally {
@@ -36,7 +60,7 @@ export const Course = () => {
 
   useEffect(() => {
     getData();
-  }, [changes]);
+  }, [changes, pagination.pageIndex, pagination.pageSize]);
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
@@ -71,6 +95,15 @@ export const Course = () => {
         header: t("blocks.table.passCount"),
         accessorKey: "pass_count",
       },
+      {
+        header: "Действия",
+        Cell: ({ row }) => (
+          <IconTrashFilled
+            style={{ color: "red" }}
+            onClick={() => deleteData(row.original?.id)}
+          />
+        ),
+      },
     ],
     [t]
   );
@@ -80,7 +113,7 @@ export const Course = () => {
     data,
     enablePinning: true,
     manualPagination: true,
-    // rowCount: totalRowCount,
+    rowCount: totalRowCount,
     mantineLoadingOverlayProps: {
       loaderProps: {
         variant: "dots",
@@ -88,11 +121,11 @@ export const Course = () => {
     },
     localization: MRT_Localization_RU,
     state: {
-      // pagination: pagination,
+      pagination: pagination,
       isLoading,
     },
     positionToolbarAlertBanner: "bottom",
-    // onPaginationChange: setPagination,
+    onPaginationChange: setPagination,
     renderTopToolbarCustomActions: () => {
       const openModal = () => {
         setModal(true);

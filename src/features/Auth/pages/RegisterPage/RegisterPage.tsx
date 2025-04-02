@@ -22,7 +22,7 @@ export function RegisterPage() {
       navigate("/auth/login");
       setErr(false);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setErr(true);
     } finally {
       setIsLoading(false);

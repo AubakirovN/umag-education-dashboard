@@ -1,7 +1,8 @@
-import { getLessons } from "@/core/api";
+import { deleteLesson, getLessons } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
+  MRT_PaginationState,
   MantineReactTable,
   useMantineReactTable,
 } from "mantine-react-table";
@@ -11,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { AddLessonModal } from "./AddLessonModal";
+import { IconTrashFilled } from "@tabler/icons-react";
 
 export const Block = () => {
   const { id } = useParams();
@@ -18,15 +20,37 @@ export const Block = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [lessons, setLessons] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [lessonModal, setLessonModal] = useState(false);
+  const [testModal, setTestModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => lessons || [], [lessons]);
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
+  const [totalRowCount, setTotalRowCount] = useState(0);
 
   const getData = async () => {
     setIsLoading(true);
+    const params = {
+      page: pagination.pageIndex + 1,
+      perPage: pagination.pageSize,
+    };
     try {
-      const response = await getLessons(id as string);
-      setLessons(response.data);
+      const response = await getLessons(id as string, params);
+      setLessons(response?.data);
+      setTotalRowCount(response?.total);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const deleteData = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await deleteLesson(id);
+      setChanges((prev) => !prev);
     } catch (e) {
       console.error(e);
     } finally {
@@ -45,14 +69,14 @@ export const Block = () => {
         accessorKey: "id",
       },
       {
-        header: t("blocks.table.title"),
+        header: "Название урока",
         accessorKey: "title",
         Cell: ({ cell }) => {
           return (
             <Button
               p={0}
               variant="subtle"
-              onClick={() => navigate(`/app/blocks/${cell.row.original?.id}`)}
+              onClick={() => navigate(`/app/lessons/${cell.row.original?.id}`)}
             >
               {cell.row.original.title}
             </Button>
@@ -60,16 +84,18 @@ export const Block = () => {
         },
       },
       {
-        header: t("blocks.table.number"),
+        enableClickToCopy: true,
+        header: "Ссылка на видео",
         accessorKey: "number",
       },
       {
-        header: t("blocks.table.maxAttempts"),
-        accessorKey: "max_attempts",
-      },
-      {
-        header: t("blocks.table.passCount"),
-        accessorKey: "pass_count",
+        header: "Действия",
+        Cell: ({ row }) => (
+          <IconTrashFilled
+            style={{ color: "red" }}
+            onClick={() => deleteData(row.original?.id)}
+          />
+        ),
       },
     ],
     [t]
@@ -80,7 +106,7 @@ export const Block = () => {
     data,
     enablePinning: true,
     manualPagination: true,
-    // rowCount: totalRowCount,
+    rowCount: totalRowCount,
     mantineLoadingOverlayProps: {
       loaderProps: {
         variant: "dots",
@@ -88,20 +114,18 @@ export const Block = () => {
     },
     localization: MRT_Localization_RU,
     state: {
-      // pagination: pagination,
+      pagination: pagination,
       isLoading,
     },
     positionToolbarAlertBanner: "bottom",
-    // onPaginationChange: setPagination,
+    onPaginationChange: setPagination,
     renderTopToolbarCustomActions: () => {
-      const openModal = () => {
-        setModal(true);
-      };
       return (
         <div style={{ display: "flex", gap: "8px" }}>
-          <Button onClick={() => openModal()} variant="filled">
+          <Button onClick={() => setLessonModal(true)} variant="filled">
             {t("lessons.lessonCreate")}
           </Button>
+          <Button disabled onClick={() => setTestModal(true)} variant="filled">Создать тест</Button>
         </div>
       );
     },
@@ -110,10 +134,15 @@ export const Block = () => {
     <>
       <MantineReactTable table={table} />
       <AddLessonModal
-        open={modal}
-        onClose={() => setModal(false)}
+        open={lessonModal}
+        onClose={() => setLessonModal(false)}
         setChanges={setChanges}
       />
+      {/* <AddTestModal
+        open={testModal}
+        onClose={() => setTestModal(false)}
+        setChanges={setChanges}
+      /> */}
     </>
   );
 };

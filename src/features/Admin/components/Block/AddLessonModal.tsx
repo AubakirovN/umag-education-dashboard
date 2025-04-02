@@ -1,12 +1,12 @@
-// import Editor from "@/components/AppLayout/components/Editor/Editor";
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { CustomModal } from "@/components/CustomModal";
 import { createLesson } from "@/core/api";
-import { Box, Button, Group, TextInput } from "@mantine/core";
+import { Box, Button, Flex, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { BaseCKEditor } from "../CKEditor/BaseCKEditor";
 
 interface AddLessonModalProps {
   open: boolean;
@@ -22,12 +22,6 @@ export const AddLessonModal = ({
   const { id } = useParams();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-  // {
-  //   "title":"",
-  //   "description":"", // optional
-  //   "video_url": "", // optional
-  //   "course_block_id":1
-  //   }
 
   const initialValues: any = {
     title: "",
@@ -47,20 +41,18 @@ export const AddLessonModal = ({
           return null;
         }
       },
-      description: (value) => {
-        if (!value) {
-          return t("form.validate.required");
-        } else {
-          return null;
-        }
-      },
-      video_url: (value) => {
-        if (!value) {
-          return t("form.validate.required");
-        } else {
-          return null;
-        }
-      },
+      // description: (value, values) => {
+      //   if (!value && !values.video_url) {
+      //     return t("form.validate.requiredDescriptionOrVideo");
+      //   }
+      //   return null;
+      // },
+      // video_url: (value, values) => {
+      //   if (!value && !values.description) {
+      //     return t("form.validate.requiredDescriptionOrVideo");
+      //   }
+      //   return null;
+      // },
       course_block_id: (value) => {
         if (!value) {
           return t("form.validate.required");
@@ -83,7 +75,7 @@ export const AddLessonModal = ({
       close();
       setChanges((prev) => !prev);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
@@ -98,22 +90,34 @@ export const AddLessonModal = ({
     >
       <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
         <Box maw={500} mx="auto">
-          <TextInput
-            label="Название урока"
-            placeholder="Введите название"
-            {...form.getInputProps("title")}
-            withAsterisk
-          />
-          {/* <Editor
-            value={form.values.description}
-            setValue={(val: any) => form.setFieldValue("description", val)}
-          /> */}
-          <TextInput
-            label="Видео"
-            placeholder="Введите ссылку"
-            {...form.getInputProps("vide_url")}
-            withAsterisk
-          />
+          <Flex direction="column" gap={10}>
+            <TextInput
+              label="Название урока"
+              placeholder="Введите название"
+              {...form.getInputProps("title")}
+              withAsterisk
+            />
+            <Text fz={14}>
+              Описание <span style={{ color: "#fa5252" }}>*</span>
+            </Text>
+            <BaseCKEditor
+              onChange={(e) => {
+                form.setFieldValue("description", e.editor.getData());
+              }}
+              initData={form.values.description}
+              style={{
+                border: form.errors.description
+                  ? "1px solid #fa5252"
+                  : "1px solid #d1d1d1",
+              }}
+            />
+            <TextInput
+              label="Видео"
+              placeholder="Введите ссылку"
+              {...form.getInputProps("video_url")}
+              withAsterisk
+            />
+          </Flex>
           <Group m="md" spacing="xs" position="right">
             <Button color="red" onClick={close}>
               {t("buttons.cancel")}

@@ -55,7 +55,6 @@ export const AddCourseModal = ({
   };
 
   const handleSubmit = async (values: any) => {
-    console.log(values);
     if (!values?.deadline) {
       delete values?.deadline;
     }
@@ -66,7 +65,7 @@ export const AddCourseModal = ({
       close();
       setChanges((prev) => !prev);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setIsLoading(false);
     }

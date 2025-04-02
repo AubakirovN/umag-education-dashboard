@@ -18,6 +18,7 @@ import CoursesPage from "./features/Admin/pages/CoursesPage/CoursesPage.tsx";
 // import BlocksPage from "./features/Admin/pages/BlocksPage/BlocksPage.tsx";
 import CoursePage from "./features/Admin/pages/CoursePage/CoursePage.tsx";
 import BlockPage from "./features/Admin/pages/BlockPage/BlockPage.tsx";
+import LessonPage from "./features/Admin/pages/LessonPage/LessonPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: "courses", element: <CoursesPage /> },
       { path: "courses/:id", element: <CoursePage /> },
       { path: "blocks/:id", element: <BlockPage /> },
+      { path: "lessons/:id", element: <LessonPage /> },
       // { path: "blocks", element: <BlocksPage /> },
       // { path: "admin/*", element: <AdminRouter /> },
     ],

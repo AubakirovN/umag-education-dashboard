@@ -1,8 +1,8 @@
-import { getCourses } from "@/core/api";
+import { deleteCourse, getCourses } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
-  // MRT_PaginationState,
+  MRT_PaginationState,
   MantineReactTable,
   useMantineReactTable,
 } from "mantine-react-table";
@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { AddCourseModal } from "./AddCourseModal";
 import { formatDMYHM } from "@/core/format";
 import { useNavigate } from "react-router-dom";
+import { IconTrashFilled } from "@tabler/icons-react";
 
 export const Courses = () => {
   const { t } = useTranslation();
@@ -22,18 +23,44 @@ export const Courses = () => {
   const [modal, setModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => courses || [], [courses]);
-
-  console.log(setIsLoading);
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
+  const [totalRowCount, setTotalRowCount] = useState(0);
 
   const getData = async () => {
-    const response = await getCourses();
-    setCourses(response.data);
-    console.log(response);
+    setIsLoading(true);
+    const params = {
+      page: pagination.pageIndex + 1,
+      perPage: pagination.pageSize,
+    };
+    try {
+      const response = await getCourses(params);
+      setCourses(response?.data);
+      setTotalRowCount(response?.total);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteData = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await deleteCourse(id);
+      setChanges((prev) => !prev);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     getData();
-  }, [changes]);
+  }, [changes, pagination.pageIndex, pagination.pageSize]);
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
@@ -60,6 +87,10 @@ export const Courses = () => {
         header: t("courses.table.deadline"),
         accessorFn: (row) => (row?.deadline ? formatDMYHM(row.deadline) : "-"),
       },
+      {
+        header: "Действия",
+        Cell: ({ row }) => <IconTrashFilled style={{color: 'red'}} onClick={() => deleteData(row.original?.id)} />,
+      },
     ],
     [t]
   );
@@ -69,7 +100,7 @@ export const Courses = () => {
     data,
     enablePinning: true,
     manualPagination: true,
-    // rowCount: totalRowCount,
+    rowCount: totalRowCount,
     mantineLoadingOverlayProps: {
       loaderProps: {
         variant: "dots",
@@ -77,11 +108,11 @@ export const Courses = () => {
     },
     localization: MRT_Localization_RU,
     state: {
-      // pagination: pagination,
+      pagination: pagination,
       isLoading,
     },
     positionToolbarAlertBanner: "bottom",
-    // onPaginationChange: setPagination,
+    onPaginationChange: setPagination,
     renderTopToolbarCustomActions: () => {
       const openModal = () => {
         setModal(true);
