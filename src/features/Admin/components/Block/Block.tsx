@@ -30,6 +30,9 @@ export const Block = () => {
   });
   const [totalRowCount, setTotalRowCount] = useState(0);
 
+  console.log(testModal);
+  
+
   const getData = async () => {
     setIsLoading(true);
     const params = {

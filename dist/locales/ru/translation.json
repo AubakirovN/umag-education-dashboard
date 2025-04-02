@@ -51,8 +51,8 @@
     "table": {
       "title": "Название блока",
       "number": "Количество блоков",
-      "maxAttempts": "Максимальное количество попыток",
-      "passCount": "Количество попыток"
+      "maxAttempts": "Количество попыток",
+      "passCount": "Проходной балл"
     },
     "modal": {
       "blockCreating": "Создание блока",
@@ -64,9 +64,9 @@
       "enterNumber": "Введите количество",
       "course": "Курс",
       "chooseCourse": "Выберите курс",
-      "maxAttempts": "Максимальное количество попыток",
-      "enterMaxAttempts": "Введите количество попыток",
-      "passCount": "Количество попыток",
+      "maxAttempts": "Количество попыток",
+      "enterMaxAttempts": "Введите проходной балл",
+      "passCount": "Проходной балл",
       "enterPassCount": "Введите количество"
     }
   },
