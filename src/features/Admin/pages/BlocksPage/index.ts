@@ -1,1 +1,1 @@
-// export * from "./BlocksPage";
+export * from "./BlocksPage";

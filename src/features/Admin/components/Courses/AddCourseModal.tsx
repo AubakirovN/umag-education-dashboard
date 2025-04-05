@@ -99,7 +99,7 @@ export const AddCourseModal = ({
               form.setFieldValue("deadline", formatYMDHM(e));
             }}
             error={form.errors.deadline}
-            withAsterisk
+            // withAsterisk
             mx="auto"
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}

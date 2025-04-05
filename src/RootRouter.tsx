@@ -19,6 +19,9 @@ import CoursesPage from "./features/Admin/pages/CoursesPage/CoursesPage.tsx";
 import CoursePage from "./features/Admin/pages/CoursePage/CoursePage.tsx";
 import BlockPage from "./features/Admin/pages/BlockPage/BlockPage.tsx";
 import LessonPage from "./features/Admin/pages/LessonPage/LessonPage.tsx";
+import BlocksPage from "./features/Admin/pages/BlocksPage/BlocksPage.tsx";
+import LessonsPage from "./features/Admin/pages/LessonsPage/LessonsPage.tsx";
+import TestsPage from "./features/Admin/pages/TestsPage/TestsPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +43,9 @@ const router = createBrowserRouter([
       { path: "courses/:id", element: <CoursePage /> },
       { path: "blocks/:id", element: <BlockPage /> },
       { path: "lessons/:id", element: <LessonPage /> },
-      // { path: "blocks", element: <BlocksPage /> },
+      { path: "blocks", element: <BlocksPage /> },
+      { path: "lessons", element: <LessonsPage /> },
+      { path: "tests", element: <TestsPage /> },
       // { path: "admin/*", element: <AdminRouter /> },
     ],
   },

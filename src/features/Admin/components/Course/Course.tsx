@@ -1,4 +1,4 @@
-import { deleteCourseBlock, getCourseBlocks } from "@/core/api";
+import { deleteCourseBlock, getCourseBlocksById } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
@@ -11,8 +11,8 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { AddBlockModal } from "./AddBlockModal";
 import { IconTrashFilled } from "@tabler/icons-react";
+import { AddBlockModal } from "../AddBlockModal";
 
 export const Course = () => {
   const { id } = useParams();
@@ -36,7 +36,7 @@ export const Course = () => {
       perPage: pagination.pageSize,
     };
     try {
-      const response = await getCourseBlocks(id as string, params);
+      const response = await getCourseBlocksById(id as string, params);
       setBlocks(response?.data);
       setTotalRowCount(response?.total);
     } catch (e) {

@@ -12,6 +12,7 @@
     "courses": "Курсы",
     "blocks": "Блоки",
     "lessons": "Уроки",
+    "tests": "Тесты",
     "statistics": "Статистика",
     "main": "Главная",
     "settings": {
@@ -49,6 +50,7 @@
   "blocks": {
     "blockCreate": "Создать блок",
     "table": {
+      "course": "Курс",
       "title": "Название блока",
       "number": "Количество блоков",
       "maxAttempts": "Количество попыток",
@@ -73,8 +75,13 @@
   "lessons": {
     "lessonCreate": "Создать урок",
     "modal": {
-      "lessonCreating": "Создание урока"
+      "lessonCreating": "Создание урока",
+      "courseBlock": "Блок",
+      "chooseCourseBlock": "Выберите блок"
     }
+  },
+  "tests": {
+    "testCreate": "Создать тест"
   },
   "errors": {
     "errorCode": "Возникла ошибка",
@@ -112,7 +119,8 @@
     "users": "Пользователи",
     "courses": "Курсы",
     "blocks": "Блоки",
-    "lessons": "Уроки"
+    "lessons": "Уроки",
+    "tests": "Тесты"
   },
   "buttons": {
     "add": "Добавить",

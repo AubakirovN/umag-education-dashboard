@@ -1,14 +1,14 @@
 import {
   IconBinaryTree,
-  // IconBuilding,
+  IconBuilding,
   // IconBuildingHospital,
   // IconCalendarTime,
   // IconChartLine,
-  // IconDoor,
+  IconDoor,
   IconHome2,
   // IconShoppingCart,
   // IconUser,
-  // IconUserCircle,
+  IconUserCircle,
   TablerIconsProps,
 } from "@tabler/icons-react";
 
@@ -27,7 +27,7 @@ export type AppNavbarCategory = {
 export const appNavbarCategories: AppNavbarCategory[] = [
   {
     translationKey: "appNavbar.users",
-    icon: IconHome2,
+    icon: IconUserCircle,
     link: "/app/users",
   },
   {
@@ -35,21 +35,21 @@ export const appNavbarCategories: AppNavbarCategory[] = [
     icon: IconBinaryTree,
     link: "/app/courses",
   },
-  // {
-  //   translationKey: "appNavbar.blocks",
-  //   icon: IconBuilding,
-  //   link: "/app/blocks",
-  // },
-  // {
-  //   translationKey: "appNavbar.holdings",
-  //   icon: IconBuilding,
-  //   link: "/app/admin/holdings",
-  // },
-  // {
-  //   translationKey: "appNavbar.medCenters",
-  //   icon: IconBuildingHospital,
-  //   link: "/app/admin/clinics",
-  // },
+  {
+    translationKey: "appNavbar.blocks",
+    icon: IconDoor,
+    link: "/app/blocks",
+  },
+  {
+    translationKey: "appNavbar.lessons",
+    icon: IconBuilding,
+    link: "/app/lessons",
+  },
+  {
+    translationKey: "appNavbar.tests",
+    icon: IconHome2,
+    link: "/app/tests",
+  },
   // {
   //   translationKey: "appNavbar.departments",
   //   icon: IconBinaryTree,

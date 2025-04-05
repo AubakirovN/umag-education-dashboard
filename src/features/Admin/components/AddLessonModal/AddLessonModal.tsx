@@ -1,12 +1,14 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { CustomModal } from "@/components/CustomModal";
-import { createLesson } from "@/core/api";
-import { Box, Button, Flex, Group, Text, TextInput } from "@mantine/core";
+import { createLesson, getCourseBlocks } from "@/core/api";
+import { Box, Button, Flex, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { BaseCKEditor } from "../CKEditor/BaseCKEditor";
+import { AsyncSelect } from "@/components/AsyncSelect";
+import { MRT_PaginationState } from "mantine-react-table";
 
 interface AddLessonModalProps {
   open: boolean;
@@ -21,13 +23,18 @@ export const AddLessonModal = ({
 }: AddLessonModalProps) => {
   const { id } = useParams();
   const { t } = useTranslation();
+  const [search, setSearch] = useState<string>("");
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues: any = {
     title: "",
     description: "",
     video_url: "",
-    course_block_id: id,
+    course_block_id: id || "",
   };
 
   const form = useForm({
@@ -53,13 +60,6 @@ export const AddLessonModal = ({
       //   }
       //   return null;
       // },
-      course_block_id: (value) => {
-        if (!value) {
-          return t("form.validate.required");
-        } else {
-          return null;
-        }
-      },
     },
   });
 
@@ -81,11 +81,39 @@ export const AddLessonModal = ({
     }
   };
 
+  const loadOptions = async () => {
+    const params = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+      search: search,
+    };
+    setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 });
+    const blocks = await getCourseBlocks(params);
+    return {
+      options:
+        blocks?.data?.map((item: any) => ({
+          value: item.id,
+          label: item.title,
+        })) ?? [],
+      hasMore: blocks?.current_page < blocks?.last_page ? true : false,
+    };
+  };
+
+  const handleSearchChange = (inputValue: string) => {
+    if (inputValue === "" && search?.length === 1) {
+      setSearch("");
+      setPagination({ ...pagination, pageIndex: 0 });
+    } else {
+      setPagination({ ...pagination, pageIndex: 0 });
+      setSearch(inputValue);
+    }
+  };
+
   return (
     <CustomModal
       opened={open}
       onClose={close}
-      title={t("blocks.modal.blockCreating")}
+      title={t("lessons.modal.lessonCreating")}
       scrolling
     >
       <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
@@ -97,9 +125,25 @@ export const AddLessonModal = ({
               {...form.getInputProps("title")}
               withAsterisk
             />
-            <Text fz={14}>
+            {!id && (
+              <AsyncSelect
+                w="100%"
+                mah={500}
+                error={form.errors.course_block_id}
+                label={t("lessons.modal.courseBlock")}
+                placeholder={t("lessons.modal.chooseCourseBlock")}
+                search={search}
+                isClearable
+                onChange={(option: any) => {
+                  form.setFieldValue("course_block_id", option?.value || "");
+                }}
+                loadOptions={loadOptions}
+                handleSearchChange={handleSearchChange}
+              />
+            )}
+            {/* <Text fz={14}>
               Описание <span style={{ color: "#fa5252" }}>*</span>
-            </Text>
+            </Text> */}
             <BaseCKEditor
               onChange={(e) => {
                 form.setFieldValue("description", e.editor.getData());
@@ -115,7 +159,7 @@ export const AddLessonModal = ({
               label="Видео"
               placeholder="Введите ссылку"
               {...form.getInputProps("video_url")}
-              withAsterisk
+              // withAsterisk
             />
           </Flex>
           <Group m="md" spacing="xs" position="right">

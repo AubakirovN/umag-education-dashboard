@@ -1,9 +1,10 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
-// import { AsyncSelect } from "@/components/AsyncSelect";
+import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import { createBlock } from "@/core/api";
+import { createBlock, getCourses } from "@/core/api";
 import { Box, Button, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -21,13 +22,18 @@ export const AddBlockModal = ({
 }: AddBlockModalProps) => {
   const { id } = useParams();
   const { t } = useTranslation();
+  const [search, setSearch] = useState<string>("");
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues: any = {
     title: "",
     description: "",
     number: 0,
-    course_id: id,
+    course_id: id || "",
     max_attempts: 0,
     pass_count: 0,
   };
@@ -57,13 +63,6 @@ export const AddBlockModal = ({
           return null;
         }
       },
-      // course_id: (value) => {
-      //   if (!value) {
-      //     return t("form.validate.required");
-      //   } else {
-      //     return null;
-      //   }
-      // },
       max_attempts: (value) => {
         if (!value) {
           return t("form.validate.required");
@@ -93,23 +92,39 @@ export const AddBlockModal = ({
       close();
       setChanges((prev) => !prev);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // const loadOptions = async () => {
-  //   const courses = await getCourses();
-  //   return {
-  //     options:
-  //       courses.data.map((item: any) => ({
-  //         value: item.id,
-  //         label: item.title,
-  //       })) ?? [],
-  //     hasMore: courses.current_page < courses.last_page ?? false,
-  //   };
-  // };
+  const loadOptions = async () => {
+    const params = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+      search: search,
+    };
+    setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 });
+    const courses = await getCourses(params);
+    return {
+      options:
+        courses?.data?.map((item: any) => ({
+          value: item.id,
+          label: item.title,
+        })) ?? [],
+      hasMore: courses?.current_page < courses?.last_page ? true : false,
+    };
+  };
+
+  const handleSearchChange = (inputValue: string) => {
+    if (inputValue === "" && search?.length === 1) {
+      setSearch("");
+      setPagination({ ...pagination, pageIndex: 0 });
+    } else {
+      setPagination({ ...pagination, pageIndex: 0 });
+      setSearch(inputValue);
+    }
+  };
 
   return (
     <CustomModal
@@ -139,20 +154,22 @@ export const AddBlockModal = ({
             {...form.getInputProps("description")}
             withAsterisk
           />
-          {/* <AsyncSelect
-            w="100%"
-            mah={500}
-            error={form.errors.course_id}
-            label={t("blocks.modal.course")}
-            placeholder={t("blocks.modal.chooseCourse")}
-            // search={search}
-            isClearable
-            onChange={(option: any) => {
-              form.setFieldValue("course_id", option?.value || "");
-            }}
-            loadOptions={loadOptions}
-            // handleSearchChange={handleSearchChange}
-          /> */}
+          {!id && (
+            <AsyncSelect
+              w="100%"
+              mah={500}
+              error={form.errors.course_id}
+              label={t("blocks.modal.course")}
+              placeholder={t("blocks.modal.chooseCourse")}
+              search={search}
+              isClearable
+              onChange={(option: any) => {
+                form.setFieldValue("course_id", option?.value || "");
+              }}
+              loadOptions={loadOptions}
+              handleSearchChange={handleSearchChange}
+            />
+          )}
           <TextInput
             type="number"
             label={t("blocks.modal.maxAttempts")}

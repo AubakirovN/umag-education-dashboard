@@ -1,4 +1,4 @@
-import { deleteLesson, getLessonsById } from "@/core/api";
+import { deleteTest, getTests } from "@/core/api";
 import { Button } from "@mantine/core";
 import {
   MRT_ColumnDef,
@@ -10,21 +10,18 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IconTrashFilled } from "@tabler/icons-react";
-import { AddLessonModal } from "../AddLessonModal";
 import { AddTestModal } from "../AddTestModal";
 
-export const Block = () => {
-  const { id } = useParams();
+export const Tests = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [lessons, setLessons] = useState([]);
-  const [lessonModal, setLessonModal] = useState(false);
-  const [testModal, setTestModal] = useState(false);
+  const [tests, setTests] = useState([]);
+  const [modal, setModal] = useState(false);
   const [changes, setChanges] = useState(false);
-  const data: any[] = useMemo(() => lessons || [], [lessons]);
+  const data: any[] = useMemo(() => tests || [], [tests]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15,
@@ -38,8 +35,8 @@ export const Block = () => {
       perPage: pagination.pageSize,
     };
     try {
-      const response = await getLessonsById(id as string, params);
-      setLessons(response?.data);
+      const response = await getTests(params);
+      setTests(response?.data);
       setTotalRowCount(response?.total);
     } catch (e) {
       console.error(e);
@@ -47,10 +44,11 @@ export const Block = () => {
       setIsLoading(false);
     }
   };
-  const deleteData = async (id: string) => {
+
+  const deleteItem = async (id: string) => {
     setIsLoading(true);
     try {
-      await deleteLesson(id);
+      await deleteTest(id);
       setChanges((prev) => !prev);
     } catch (e) {
       console.error(e);
@@ -85,6 +83,25 @@ export const Block = () => {
         },
       },
       {
+        header: "Блок",
+        accessorKey: "pivot.course_block_id",
+        Cell: ({ cell }) => {
+          return (
+            <Button
+              p={0}
+              variant="subtle"
+              onClick={() =>
+                navigate(
+                  `/app/blocks/${cell.row.original?.pivot?.course_block_id}`
+                )
+              }
+            >
+              {cell.row.original?.pivot?.course_block_name || "mockBlock"}
+            </Button>
+          );
+        },
+      },
+      {
         enableClickToCopy: true,
         header: "Ссылка на видео",
         accessorKey: "number",
@@ -94,7 +111,7 @@ export const Block = () => {
         Cell: ({ row }) => (
           <IconTrashFilled
             style={{ color: "red" }}
-            onClick={() => deleteData(row.original?.id)}
+            onClick={() => deleteItem(row.original?.id)}
           />
         ),
       },
@@ -121,13 +138,13 @@ export const Block = () => {
     positionToolbarAlertBanner: "bottom",
     onPaginationChange: setPagination,
     renderTopToolbarCustomActions: () => {
+      const openModal = () => {
+        setModal(true);
+      };
       return (
         <div style={{ display: "flex", gap: "8px" }}>
-          <Button onClick={() => setLessonModal(true)} variant="filled">
-            {t("lessons.lessonCreate")}
-          </Button>
-          <Button onClick={() => setTestModal(true)} variant="filled">
-            Создать тест
+          <Button onClick={() => openModal()} variant="filled">
+            {t("tests.testCreate")}
           </Button>
         </div>
       );
@@ -136,14 +153,9 @@ export const Block = () => {
   return (
     <>
       <MantineReactTable table={table} />
-      <AddLessonModal
-        open={lessonModal}
-        onClose={() => setLessonModal(false)}
-        setChanges={setChanges}
-      />
       <AddTestModal
-        open={testModal}
-        onClose={() => setTestModal(false)}
+        open={modal}
+        onClose={() => setModal(false)}
         setChanges={setChanges}
       />
     </>

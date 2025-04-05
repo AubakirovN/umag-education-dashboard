@@ -1,12 +1,12 @@
 import { Anchor, Breadcrumbs, Stack, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
-import { Blocks } from "../../components/Blocks";
+import { Tests } from "../../components/Tests";
 
-const BlocksPage = () => {
+const TestsPage = () => {
   const { t } = useTranslation();
   const items = [
     { title: t("breadcrumbs.main"), href: "/app" },
-    { title: t("breadcrumbs.blocks"), href: "/app/blocks" },
+    { title: t("breadcrumbs.tests"), href: "/app/tests" },
   ].map((item, index) => (
     <Anchor href={item.href} key={index}>
       {item.title}
@@ -14,11 +14,11 @@ const BlocksPage = () => {
   ));
   return (
     <Stack>
-      <Title order={1}>{t("appNavbar.blocks")}</Title>
+      <Title order={1}>{t("appNavbar.tests")}</Title>
       <Breadcrumbs>{items}</Breadcrumbs>
-      <Blocks />
+      <Tests />
     </Stack>
   );
 };
 
-export default BlocksPage;
+export default TestsPage;
