@@ -35,6 +35,7 @@
     "courseCreate": "Создать курс",
     "modal": {
       "courseCreating": "Создание курса",
+      "courseEditting": "Редактирование курса",
       "title": "Название курса",
       "enterTitle": "Введите название",
       "description": "Описание курса",

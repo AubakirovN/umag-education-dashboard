@@ -84,16 +84,20 @@ export const Blocks = () => {
       },
       {
         header: t("blocks.table.course"),
-        accessorKey: "pivot.course_id",
         Cell: ({ cell }) => {
           return (
-            <Button
-              p={0}
-              variant="subtle"
-              onClick={() => navigate(`/app/course/${cell.row.original?.pivot?.course_id}`)}
-            >
-              {cell.row.original?.pivot?.course_title || 'mockCourse'}
-            </Button>
+            <>
+              {cell.row.original?.courses?.map((course: any, key: number) => (
+                <Button
+                  key={key}
+                  p={0}
+                  variant="subtle"
+                  onClick={() => navigate(`/app/courses/${course?.id}`)}
+                >
+                  {course?.title}
+                </Button>
+              ))}
+            </>
           );
         },
       },

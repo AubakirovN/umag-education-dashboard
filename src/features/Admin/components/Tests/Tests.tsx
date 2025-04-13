@@ -68,43 +68,29 @@ export const Tests = () => {
         accessorKey: "id",
       },
       {
-        header: "Название урока",
-        accessorKey: "title",
-        Cell: ({ cell }) => {
-          return (
-            <Button
-              p={0}
-              variant="subtle"
-              onClick={() => navigate(`/app/lessons/${cell.row.original?.id}`)}
-            >
-              {cell.row.original.title}
-            </Button>
-          );
-        },
+        header: "Вопрос",
+        accessorKey: "question",
       },
       {
         header: "Блок",
-        accessorKey: "pivot.course_block_id",
         Cell: ({ cell }) => {
           return (
-            <Button
-              p={0}
-              variant="subtle"
-              onClick={() =>
-                navigate(
-                  `/app/blocks/${cell.row.original?.pivot?.course_block_id}`
+            <>
+              {cell.row.original?.course_blocks?.map(
+                (block: any, key: number) => (
+                  <Button
+                    key={key}
+                    p={0}
+                    variant="subtle"
+                    onClick={() => navigate(`/app/blocks/${block?.id}`)}
+                  >
+                    {block?.title}
+                  </Button>
                 )
-              }
-            >
-              {cell.row.original?.pivot?.course_block_name || "mockBlock"}
-            </Button>
+              )}
+            </>
           );
         },
-      },
-      {
-        enableClickToCopy: true,
-        header: "Ссылка на видео",
-        accessorKey: "number",
       },
       {
         header: "Действия",

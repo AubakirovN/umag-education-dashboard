@@ -1,5 +1,5 @@
 import { deleteCourse, getCourses } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -10,17 +10,20 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AddCourseModal } from "./AddCourseModal";
+import { AddCourseModal } from "../AddCourseModal";
 import { formatDMYHM } from "@/core/format";
 import { useNavigate } from "react-router-dom";
-import { IconTrashFilled } from "@tabler/icons-react";
+import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
+import { EditCourseModal } from "../EditCourseModal";
 
 export const Courses = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => courses || [], [courses]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -89,7 +92,20 @@ export const Courses = () => {
       },
       {
         header: "Действия",
-        Cell: ({ row }) => <IconTrashFilled style={{color: 'red'}} onClick={() => deleteData(row.original?.id)} />,
+        Cell: ({ row }) => (
+          <Flex gap={10}>
+            <IconEdit
+              onClick={() => {
+                setSelectedCourse(row.original);
+                setEditModal(true);
+              }}
+            />
+            <IconTrashFilled
+              style={{ color: "red" }}
+              onClick={() => deleteData(row.original?.id)}
+            />
+          </Flex>
+        ),
       },
     ],
     [t]
@@ -133,6 +149,12 @@ export const Courses = () => {
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
+      />
+      <EditCourseModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        setChanges={setChanges}
+        course={selectedCourse}
       />
     </>
   );

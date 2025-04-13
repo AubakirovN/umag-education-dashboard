@@ -35,6 +35,10 @@ export const createCourse = async (body: any) => {
   const response = await axios.post(`${baseUrl}/courses`, body);
   return response.data;
 };
+export const editCourse = async (courseId: string, body: any) => {
+  const response = await axios.put(`${baseUrl}/courses/${courseId}`, body);
+  return response.data;
+}
 export const createBlock = async (body: any) => {
   const response = await axios.post(`${baseUrl}/course-blocks`, body);
   return response.data;
