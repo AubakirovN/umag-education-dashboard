@@ -1,5 +1,5 @@
 import { deleteTest, getTests } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -11,15 +11,18 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { IconTrashFilled } from "@tabler/icons-react";
+import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
 import { AddTestModal } from "../AddTestModal";
+import { EditTestModal } from "../EditTestModal";
 
 export const Tests = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [tests, setTests] = useState([]);
+  const [selectedTest, setSelectedTest] = useState(null);
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => tests || [], [tests]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -69,7 +72,19 @@ export const Tests = () => {
       },
       {
         header: "Вопрос",
-        accessorKey: "question",
+        Cell: ({ cell }) => {
+          return (
+            <div>
+              <Button
+                p={0}
+                variant="subtle"
+                onClick={() => navigate(`/app/tests/${cell.row.original?.id}`)}
+              >
+                {cell.row.original.question}
+              </Button>
+            </div>
+          );
+        },
       },
       {
         header: "Блок",
@@ -78,14 +93,16 @@ export const Tests = () => {
             <>
               {cell.row.original?.course_blocks?.map(
                 (block: any, key: number) => (
-                  <Button
-                    key={key}
-                    p={0}
-                    variant="subtle"
-                    onClick={() => navigate(`/app/blocks/${block?.id}`)}
-                  >
-                    {block?.title}
-                  </Button>
+                  <div key={key}>
+                    <Button
+                      key={key}
+                      p={0}
+                      variant="subtle"
+                      onClick={() => navigate(`/app/blocks/${block?.id}`)}
+                    >
+                      {block?.title}
+                    </Button>
+                  </div>
                 )
               )}
             </>
@@ -95,10 +112,18 @@ export const Tests = () => {
       {
         header: "Действия",
         Cell: ({ row }) => (
-          <IconTrashFilled
-            style={{ color: "red" }}
-            onClick={() => deleteItem(row.original?.id)}
-          />
+          <Flex gap={10}>
+            <IconEdit
+              onClick={() => {
+                setSelectedTest(row.original);
+                setEditModal(true);
+              }}
+            />
+            <IconTrashFilled
+              style={{ color: "red" }}
+              onClick={() => deleteItem(row.original?.id)}
+            />
+          </Flex>
         ),
       },
     ],
@@ -143,6 +168,12 @@ export const Tests = () => {
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
+      />
+      <EditTestModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        setChanges={setChanges}
+        test={selectedTest}
       />
     </>
   );

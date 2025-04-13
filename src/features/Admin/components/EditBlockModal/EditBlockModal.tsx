@@ -1,27 +1,28 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import { createBlock, getCourses } from "@/core/api";
+import { editBlock, getCourses } from "@/core/api";
 import { Box, Button, Group, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
-interface AddBlockModalProps {
+interface EditBlockModalProps {
   open: boolean;
   onClose: () => void;
   setChanges: Dispatch<SetStateAction<boolean>>;
+  block: any;
 }
 
-export const AddBlockModal = ({
+export const EditBlockModal = ({
   open,
   onClose,
   setChanges,
-}: AddBlockModalProps) => {
-  const { id } = useParams();
+  block,
+}: EditBlockModalProps) => {
   const { t } = useTranslation();
+  // const { id } = useParams();
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState<string>("");
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -34,7 +35,7 @@ export const AddBlockModal = ({
     title: "",
     description: "",
     number: 0,
-    course_ids: id ? [id] : [],
+    course_ids: [],
     max_attempts: 0,
     pass_count: 0,
   };
@@ -82,14 +83,14 @@ export const AddBlockModal = ({
   });
 
   const close = () => {
-    form.reset();
     onClose();
+    form.reset();
   };
 
   const handleSubmit = async (values: any) => {
     setIsLoading(true);
     try {
-      await createBlock(values);
+      await editBlock(block?.id, values);
       close();
       setChanges((prev) => !prev);
     } catch (e) {
@@ -126,7 +127,6 @@ export const AddBlockModal = ({
       setSearch(inputValue);
     }
   };
-
   const handleCoursesChange = (option: any) => {
     form.setFieldValue(
       "course_ids",
@@ -135,14 +135,33 @@ export const AddBlockModal = ({
     setCourses(option);
   };
 
+  useEffect(() => {
+    if (open) {
+      form.setValues({
+        title: block?.title || "",
+        description: block?.description || "",
+        number: block?.number || 0,
+        course_ids: block?.courses?.map((item: any) => item?.id) || [],
+        max_attempts: block?.max_attempts || 0,
+        pass_count: block?.pass_count || 0,
+      });
+      setCourses(
+        block?.courses?.map((item: any) => ({
+          value: item?.id,
+          label: item?.title,
+        })) || []
+      );
+    }
+  }, [open]);
+
   return (
     <CustomModal
       opened={open}
       onClose={close}
-      title={t("blocks.modal.blockCreating")}
+      title={t("blocks.modal.blockEditting")}
       scrolling
     >
-      <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Box maw={500} mx="auto">
           <TextInput
             label={t("blocks.modal.title")}
@@ -151,34 +170,34 @@ export const AddBlockModal = ({
             withAsterisk
           />
           <TextInput
+            label={t("blocks.modal.description")}
+            placeholder={t("blocks.modal.enterDescription")}
+            {...form.getInputProps("description")}
+            withAsterisk
+          />
+          {/* {!id && ( */}
+          <AsyncSelect
+            w="100%"
+            mah={300}
+            value={courses}
+            error={form.errors.course_ids}
+            label={t("blocks.modal.course")}
+            placeholder={t("blocks.modal.chooseCourse")}
+            search={search}
+            isMulti
+            isClearable
+            onChange={handleCoursesChange}
+            loadOptions={loadOptions}
+            handleSearchChange={handleSearchChange}
+          />
+          {/* )} */}
+          <TextInput
             type="number"
             label={t("blocks.modal.number")}
             placeholder={t("blocks.modal.enterNumber")}
             {...form.getInputProps("number")}
             withAsterisk
           />
-          <TextInput
-            label={t("blocks.modal.description")}
-            placeholder={t("blocks.modal.enterDescription")}
-            {...form.getInputProps("description")}
-            withAsterisk
-          />
-          {!id && (
-            <AsyncSelect
-              w="100%"
-              mah={300}
-              value={courses}
-              error={form.errors.course_id}
-              label={t("blocks.modal.course")}
-              placeholder={t("blocks.modal.chooseCourse")}
-              search={search}
-              isMulti
-              isClearable
-              onChange={handleCoursesChange}
-              loadOptions={loadOptions}
-              handleSearchChange={handleSearchChange}
-            />
-          )}
           <TextInput
             type="number"
             label={t("blocks.modal.maxAttempts")}
@@ -197,7 +216,7 @@ export const AddBlockModal = ({
             <Button color="red" onClick={close}>
               {t("buttons.cancel")}
             </Button>
-            <Button type="submit">{t("buttons.create")}</Button>
+            <Button type="submit">{t("buttons.edit")}</Button>
           </Group>
         </Box>
       </form>

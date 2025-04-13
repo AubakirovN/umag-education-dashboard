@@ -22,6 +22,7 @@ import LessonPage from "./features/Admin/pages/LessonPage/LessonPage.tsx";
 import BlocksPage from "./features/Admin/pages/BlocksPage/BlocksPage.tsx";
 import LessonsPage from "./features/Admin/pages/LessonsPage/LessonsPage.tsx";
 import TestsPage from "./features/Admin/pages/TestsPage/TestsPage.tsx";
+import TestPage from "./features/Admin/pages/TestPage/TestPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       { path: "blocks", element: <BlocksPage /> },
       { path: "lessons", element: <LessonsPage /> },
       { path: "tests", element: <TestsPage /> },
+      { path: "tests/:id", element: <TestPage /> },
       // { path: "admin/*", element: <AdminRouter /> },
     ],
   },

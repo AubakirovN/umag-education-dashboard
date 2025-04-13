@@ -1,7 +1,6 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { CustomModal } from "@/components/CustomModal";
-import { createCourse, editCourse } from "@/core/api";
-import { formatYMDHM } from "@/core/format";
+import { editCourse } from "@/core/api";
 import { Box, Button, Group, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";

@@ -59,6 +59,7 @@
     },
     "modal": {
       "blockCreating": "Создание блока",
+      "blockEditting": "Редактирование блока",
       "title": "Название блока",
       "enterTitle": "Введите название",
       "description": "Описание блока",
@@ -77,12 +78,16 @@
     "lessonCreate": "Создать урок",
     "modal": {
       "lessonCreating": "Создание урока",
+      "lessonEditting": "Редактирование урока",
       "courseBlock": "Блок",
       "chooseCourseBlock": "Выберите блок"
     }
   },
   "tests": {
-    "testCreate": "Создать тест"
+    "testCreate": "Создать тест",
+    "modal": {
+      "testEditting": "Редактирование теста"
+    }
   },
   "errors": {
     "errorCode": "Возникла ошибка",
@@ -121,7 +126,8 @@
     "courses": "Курсы",
     "blocks": "Блоки",
     "lessons": "Уроки",
-    "tests": "Тесты"
+    "tests": "Тесты",
+    "question": "Вопрос"
   },
   "buttons": {
     "add": "Добавить",

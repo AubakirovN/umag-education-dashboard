@@ -1,6 +1,7 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
+import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import { createTest, getCourseBlocks } from "@/core/api";
+import { editTest, getCourseBlocks } from "@/core/api";
 import {
   ActionIcon,
   Box,
@@ -11,27 +12,27 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { Dispatch, SetStateAction, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { IconTrash } from "@tabler/icons-react";
-import { randomId } from "@mantine/hooks";
-import { AsyncSelect } from "@/components/AsyncSelect";
 import { MRT_PaginationState } from "mantine-react-table";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { randomId } from "@mantine/hooks";
+import { IconTrash } from "@tabler/icons-react";
 
-interface AddTestModalProps {
+interface EditTestModalProps {
   open: boolean;
   onClose: () => void;
   setChanges: Dispatch<SetStateAction<boolean>>;
+  test: any;
 }
 
-export const AddTestModal = ({
+export const EditTestModal = ({
   open,
   onClose,
   setChanges,
-}: AddTestModalProps) => {
-  const { id } = useParams();
+  test,
+}: EditTestModalProps) => {
   const { t } = useTranslation();
+  // const { id } = useParams();
   const [courseBlocks, setCourseBlocks] = useState([]);
   const [search, setSearch] = useState<string>("");
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -42,8 +43,7 @@ export const AddTestModal = ({
 
   const initialValues: any = {
     question: "",
-    answers: [{ name: "", is_correct: false, key: randomId() }],
-    course_block_ids: id ? [id] : [],
+    answers: [],
   };
 
   const form = useForm({
@@ -75,8 +75,21 @@ export const AddTestModal = ({
   });
 
   const close = () => {
-    form.reset();
     onClose();
+    form.reset();
+  };
+
+  const handleSubmit = async (values: any) => {
+    setIsLoading(true);
+    try {
+      await editTest(test?.id, values);
+      close();
+      setChanges((prev) => !prev);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const loadOptions = async () => {
@@ -106,20 +119,6 @@ export const AddTestModal = ({
       setSearch(inputValue);
     }
   };
-
-  const handleSubmit = async (values: any) => {
-    setIsLoading(true);
-    try {
-      await createTest(values);
-      close();
-      setChanges((prev) => !prev);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleBlocksChange = (option: any) => {
     form.setFieldValue(
       "course_block_ids",
@@ -127,6 +126,23 @@ export const AddTestModal = ({
     );
     setCourseBlocks(option);
   };
+
+  useEffect(() => {
+    if (open) {
+      form.setValues({
+        question: test?.question || "",
+        answers: test?.answers ? JSON.parse(test?.answers) : [],
+        course_block_ids:
+          test?.course_blocks?.map((item: any) => item?.id) || [],
+      });
+      setCourseBlocks(
+        test?.course_blocks?.map((item: any) => ({
+          value: item?.id,
+          label: item?.title,
+        })) || []
+      );
+    }
+  }, [open]);
 
   const fields = form.values.answers?.map((item: any, i: number) => {
     const index = form.values.answers?.findIndex(
@@ -136,6 +152,7 @@ export const AddTestModal = ({
       <Group key={item.key} mt="xs">
         <TextInput
           name={`answers.${index}.name`}
+          value={form.values.answers?.[index]?.name}
           placeholder="Ответ"
           sx={{ flex: 20 }}
           onChange={(e) => {
@@ -169,8 +186,13 @@ export const AddTestModal = ({
   });
 
   return (
-    <CustomModal opened={open} onClose={close} title="Создание теста" scrolling>
-      <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
+    <CustomModal
+      opened={open}
+      onClose={close}
+      title={t("tests.modal.testEditting")}
+      scrolling
+    >
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Box maw={500} mx="auto">
           <Flex direction="column" gap={10}>
             <TextInput
@@ -195,27 +217,27 @@ export const AddTestModal = ({
               + Добавить ответ
             </Button>
           </Group>
-          {!id && (
-            <AsyncSelect
-              w="100%"
-              mah={300}
-              value={courseBlocks}
-              error={form.errors.course_block_ids}
-              label={t("lessons.modal.courseBlock")}
-              placeholder={t("lessons.modal.chooseCourseBlock")}
-              isMulti
-              search={search}
-              isClearable
-              onChange={handleBlocksChange}
-              loadOptions={loadOptions}
-              handleSearchChange={handleSearchChange}
-            />
-          )}
+          {/* {!id && ( */}
+          <AsyncSelect
+            w="100%"
+            mah={300}
+            value={courseBlocks}
+            error={form.errors.course_block_ids}
+            label={t("lessons.modal.courseBlock")}
+            placeholder={t("lessons.modal.chooseCourseBlock")}
+            isMulti
+            search={search}
+            isClearable
+            onChange={handleBlocksChange}
+            loadOptions={loadOptions}
+            handleSearchChange={handleSearchChange}
+          />
+          {/* )} */}
           <Group m="md" spacing="xs" position="right">
             <Button color="red" onClick={close}>
               {t("buttons.cancel")}
             </Button>
-            <Button type="submit">{t("buttons.create")}</Button>
+            <Button type="submit">{t("buttons.edit")}</Button>
           </Group>
         </Box>
       </form>

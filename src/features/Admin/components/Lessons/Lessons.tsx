@@ -1,5 +1,5 @@
 import { deleteLesson, getLessons } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -11,15 +11,18 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { IconTrashFilled } from "@tabler/icons-react";
+import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
 import { AddLessonModal } from "../AddLessonModal";
+import { EditLessonModal } from "../EditLessonModal";
 
 export const Lessons = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [lessons, setLessons] = useState([]);
+  const [selectedLesson, setSelectedLesson] = useState(null);
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => lessons || [], [lessons]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -72,13 +75,17 @@ export const Lessons = () => {
         accessorKey: "title",
         Cell: ({ cell }) => {
           return (
-            <Button
-              p={0}
-              variant="subtle"
-              onClick={() => navigate(`/app/lessons/${cell.row.original?.id}`)}
-            >
-              {cell.row.original.title}
-            </Button>
+            <div>
+              <Button
+                p={0}
+                variant="subtle"
+                onClick={() =>
+                  navigate(`/app/lessons/${cell.row.original?.id}`)
+                }
+              >
+                {cell.row.original.title}
+              </Button>
+            </div>
           );
         },
       },
@@ -111,10 +118,18 @@ export const Lessons = () => {
       {
         header: "Действия",
         Cell: ({ row }) => (
-          <IconTrashFilled
-            style={{ color: "red" }}
-            onClick={() => deleteItem(row.original?.id)}
-          />
+          <Flex gap={10}>
+            <IconEdit
+              onClick={() => {
+                setSelectedLesson(row.original);
+                setEditModal(true);
+              }}
+            />
+            <IconTrashFilled
+              style={{ color: "red" }}
+              onClick={() => deleteItem(row.original?.id)}
+            />
+          </Flex>
         ),
       },
     ],
@@ -159,6 +174,12 @@ export const Lessons = () => {
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
+      />
+      <EditLessonModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        setChanges={setChanges}
+        lesson={selectedLesson}
       />
     </>
   );

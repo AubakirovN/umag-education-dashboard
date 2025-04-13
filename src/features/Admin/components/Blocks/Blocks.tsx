@@ -1,5 +1,5 @@
 import { deleteCourseBlock, getCourseBlocks } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -12,14 +12,17 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AddBlockModal } from "../AddBlockModal";
 import { useNavigate } from "react-router-dom";
-import { IconTrashFilled } from "@tabler/icons-react";
+import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
+import { EditBlockModal } from "../EditBlockModal";
 
 export const Blocks = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [courseBlocks, setCourseBlocks] = useState([]);
+  const [selectedBlock, setSelectedBlock] = useState(null);
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => courseBlocks || [], [courseBlocks]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -88,14 +91,16 @@ export const Blocks = () => {
           return (
             <>
               {cell.row.original?.courses?.map((course: any, key: number) => (
-                <Button
-                  key={key}
-                  p={0}
-                  variant="subtle"
-                  onClick={() => navigate(`/app/courses/${course?.id}`)}
-                >
-                  {course?.title}
-                </Button>
+                <div>
+                  <Button
+                    key={key}
+                    p={0}
+                    variant="subtle"
+                    onClick={() => navigate(`/app/courses/${course?.id}`)}
+                  >
+                    {course?.title}
+                  </Button>
+                </div>
               ))}
             </>
           );
@@ -116,10 +121,18 @@ export const Blocks = () => {
       {
         header: "Действия",
         Cell: ({ row }) => (
-          <IconTrashFilled
-            style={{ color: "red" }}
-            onClick={() => deleteBlock(row.original?.id)}
-          />
+          <Flex gap={10}>
+            <IconEdit
+              onClick={() => {
+                setSelectedBlock(row.original);
+                setEditModal(true);
+              }}
+            />
+            <IconTrashFilled
+              style={{ color: "red" }}
+              onClick={() => deleteBlock(row.original?.id)}
+            />
+          </Flex>
         ),
       },
     ],
@@ -164,6 +177,12 @@ export const Blocks = () => {
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
+      />
+      <EditBlockModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        setChanges={setChanges}
+        block={selectedBlock}
       />
     </>
   );
