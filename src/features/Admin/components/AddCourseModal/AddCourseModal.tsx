@@ -1,10 +1,12 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
+import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import { createCourse } from "@/core/api";
+import { createCourse, getRoles } from "@/core/api";
 import { formatYMDHM } from "@/core/format";
 import { Box, Button, Group, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -20,11 +22,18 @@ export const AddCourseModal = ({
   setChanges,
 }: AddCourseModalProps) => {
   const { t } = useTranslation();
+  const [roles, setRoles] = useState([]);
+  const [search, setSearch] = useState<string>("");
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues: any = {
     title: "",
     description: "",
+    role_ids: [],
     deadline: "",
   };
 
@@ -33,6 +42,13 @@ export const AddCourseModal = ({
     validateInputOnBlur: true,
     validate: {
       title: (value) => {
+        if (!value) {
+          return t("form.validate.required");
+        } else {
+          return null;
+        }
+      },
+      role_ids: (value) => {
         if (!value) {
           return t("form.validate.required");
         } else {
@@ -52,6 +68,43 @@ export const AddCourseModal = ({
   const close = () => {
     form.reset();
     onClose();
+  };
+
+  const loadOptions = async () => {
+    const params = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+      search: search,
+    };
+    setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 });
+    const roles = await getRoles(params);
+    return {
+      options:
+        roles?.data?.map((item: any) => ({
+          value: item.id,
+          label: item.name,
+        })) ?? [],
+      hasMore: roles?.current_page < roles?.last_page ? true : false,
+    };
+  };
+
+  const handleSearchChange = (inputValue: string) => {
+    if (inputValue === "" && search?.length === 1) {
+      setSearch("");
+      setPagination({ ...pagination, pageIndex: 0 });
+    } else {
+      setPagination({ ...pagination, pageIndex: 0 });
+      setSearch(inputValue);
+    }
+  };
+
+  const handleRolesChange = (option: any) => {
+    console.log(option);
+    form.setFieldValue(
+      "role_ids",
+      option.map((opt: any) => opt.value)
+    );
+    setRoles(option);
   };
 
   const handleSubmit = async (values: any) => {
@@ -91,6 +144,20 @@ export const AddCourseModal = ({
             placeholder={t("courses.modal.enterDescription")}
             {...form.getInputProps("description")}
             withAsterisk
+          />
+          <AsyncSelect
+            w="100%"
+            mah={300}
+            value={roles}
+            error={form.errors.role_ids}
+            label="Роль"
+            placeholder="Выберите роль"
+            search={search}
+            isMulti
+            isClearable
+            onChange={handleRolesChange}
+            loadOptions={loadOptions}
+            handleSearchChange={handleSearchChange}
           />
           <DateTimePicker
             label={t("courses.modal.deadline")}

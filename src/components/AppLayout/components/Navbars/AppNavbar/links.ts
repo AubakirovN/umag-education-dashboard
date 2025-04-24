@@ -6,6 +6,7 @@ import {
   // IconChartLine,
   IconDoor,
   IconHome2,
+  IconLockAccess,
   // IconShoppingCart,
   // IconUser,
   IconUserCircle,
@@ -25,6 +26,11 @@ export type AppNavbarCategory = {
 };
 
 export const appNavbarCategories: AppNavbarCategory[] = [
+  {
+    translationKey: "appNavbar.roles",
+    icon: IconLockAccess,
+    link: "/app/roles",
+  },
   {
     translationKey: "appNavbar.users",
     icon: IconUserCircle,

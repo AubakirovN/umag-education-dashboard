@@ -2,6 +2,7 @@
   "switchLanguage": "Сменить язык",
   "appNavbar": {
     "users": "Пользователи",
+    "roles": "Роли",
     "userInfo": {
       "menu": {
         "loginAs": "Войти как",

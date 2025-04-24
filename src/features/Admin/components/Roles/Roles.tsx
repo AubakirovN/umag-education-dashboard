@@ -1,4 +1,4 @@
-import { deleteCourse, getCourses } from "@/core/api";
+import { deleteCourse, getCourses, getRoles } from "@/core/api";
 import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
@@ -15,17 +15,18 @@ import { formatDMYHM } from "@/core/format";
 import { useNavigate } from "react-router-dom";
 import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
 import { EditCourseModal } from "../EditCourseModal";
+import { AddRoleModal } from "../AddRoleModal";
 
-export const Courses = () => {
+export const Roles = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [courses, setCourses] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [modal, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
-  const data: any[] = useMemo(() => courses || [], [courses]);
+  const data: any[] = useMemo(() => roles || [], [roles]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15,
@@ -39,8 +40,8 @@ export const Courses = () => {
       perPage: pagination.pageSize,
     };
     try {
-      const response = await getCourses(params);
-      setCourses(response?.data);
+      const response = await getRoles(params);
+      setRoles(response?.data);
       setTotalRowCount(response?.total);
     } catch (e) {
       console.error(e);
@@ -72,44 +73,12 @@ export const Courses = () => {
         accessorKey: "id",
       },
       {
-        header: t("courses.table.title"),
-        accessorKey: "title",
-        Cell: ({ cell }) => {
-          return (
-            <Button
-              p={0}
-              variant="subtle"
-              onClick={() => navigate(`${cell.row.original?.id}`)}
-            >
-              {cell.row.original.title}
-            </Button>
-          );
-        },
+        header: "Название",
+        accessorKey: "name",
       },
       {
-        header: "Роли",
-        accessorFn: (row) => row?.roles?.[0]?.name || '-',
-      },
-      {
-        header: t("courses.table.deadline"),
-        accessorFn: (row) => (row?.deadline ? formatDMYHM(row.deadline) : "-"),
-      },
-      {
-        header: "Действия",
-        Cell: ({ row }) => (
-          <Flex gap={10}>
-            <IconEdit
-              onClick={() => {
-                setSelectedCourse(row.original);
-                setEditModal(true);
-              }}
-            />
-            <IconTrashFilled
-              style={{ color: "red" }}
-              onClick={() => deleteData(row.original?.id)}
-            />
-          </Flex>
-        ),
+        header: "Статус",
+        accessorKey: "active"
       },
     ],
     [t]
@@ -140,7 +109,7 @@ export const Courses = () => {
       return (
         <div style={{ display: "flex", gap: "8px" }}>
           <Button onClick={() => openModal()} variant="filled">
-            {t("courses.courseCreate")}
+            Создать роль
           </Button>
         </div>
       );
@@ -149,16 +118,10 @@ export const Courses = () => {
   return (
     <>
       <MantineReactTable table={table} />
-      <AddCourseModal
+      <AddRoleModal
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
-      />
-      <EditCourseModal
-        open={editModal}
-        onClose={() => setEditModal(false)}
-        setChanges={setChanges}
-        course={selectedCourse}
       />
     </>
   );
