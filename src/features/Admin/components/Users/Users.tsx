@@ -1,19 +1,20 @@
 import { Button, Flex } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+// import { useEffect, useState } from "react";
 import { AddUserModal } from "./AddUserModal";
-import { getUsers } from "@/core/api";
+// import { getUsers } from "@/core/api";
 
 export const Users = () => {
   const [addModal, setAddModal] = useState(false);
 
-  const getData = async () => {
-    const response = await getUsers();
-    console.log(response);
-  }
+  // const getData = async () => {
+  //   const response = await getUsers();
+  //   console.log(response);
+  // }
 
-  useEffect(() => {
-    getUsers();
-  }, [])
+  // useEffect(() => {
+  //   getUsers();
+  // }, [])
   
   return (
     <>

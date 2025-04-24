@@ -1,5 +1,7 @@
-import { deleteCourse, getCourses, getRoles } from "@/core/api";
-import { Button, Flex } from "@mantine/core";
+import { getRoles } from "@/core/api";
+// import { deleteCourse, getCourses, getRoles } from "@/core/api";
+import { Button } from "@mantine/core";
+// import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -10,21 +12,19 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AddCourseModal } from "../AddCourseModal";
-import { formatDMYHM } from "@/core/format";
-import { useNavigate } from "react-router-dom";
-import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
-import { EditCourseModal } from "../EditCourseModal";
+// import { AddCourseModal } from "../AddCourseModal";
+// import { formatDMYHM } from "@/core/format";
+// import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
+// import { EditCourseModal } from "../EditCourseModal";
 import { AddRoleModal } from "../AddRoleModal";
 
 export const Roles = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [roles, setRoles] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(null);
+  // const [selectedCourse, setSelectedCourse] = useState(null);
   const [modal, setModal] = useState(false);
-  const [editModal, setEditModal] = useState(false);
+  // const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => roles || [], [roles]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -50,17 +50,17 @@ export const Roles = () => {
     }
   };
 
-  const deleteData = async (id: string) => {
-    setIsLoading(true);
-    try {
-      await deleteCourse(id);
-      setChanges((prev) => !prev);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const deleteData = async (id: string) => {
+  //   setIsLoading(true);
+  //   try {
+  //     await deleteCourse(id);
+  //     setChanges((prev) => !prev);
+  //   } catch (e) {
+  //     console.error(e);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   useEffect(() => {
     getData();
