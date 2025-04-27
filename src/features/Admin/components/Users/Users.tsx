@@ -75,7 +75,7 @@ export const Users = () => {
       perPage: pagination.pageSize,
     };
     try {
-      const response = await getUsers();
+      const response = await getUsers(params);
       setUsers(response?.data);
       setTotalRowCount(response?.total);
     } catch (e) {

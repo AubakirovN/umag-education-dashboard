@@ -19,7 +19,7 @@ export const importUsers = async (file: any): Promise<any> => {
   );
   return response.data;
 };
-export const getUsers = async (): Promise<any> => {
-  const response = await axios.get<any>(`${baseUrl}/users`);
+export const getUsers = async (params: any): Promise<any> => {
+  const response = await axios.get<any>(`${baseUrl}/users`, { params });
   return response.data;
 };
