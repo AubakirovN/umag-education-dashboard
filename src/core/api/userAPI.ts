@@ -6,7 +6,20 @@ export const addUser = async (body: AddUserDto): Promise<any> => {
   const response = await axios.post<any>(`${baseUrl}/phone-roles`, body);
   return response.data;
 };
+export const importUsers = async (file: any): Promise<any> => {
+  console.log(file);
+  const response = await axios.post<any>(
+    `${baseUrl}/import-phones-roles`,
+    { file },
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
 export const getUsers = async (): Promise<any> => {
-  const response = await axios.get<any>(`${baseUrl}/admin/users`);
+  const response = await axios.get<any>(`${baseUrl}/users`);
   return response.data;
 };

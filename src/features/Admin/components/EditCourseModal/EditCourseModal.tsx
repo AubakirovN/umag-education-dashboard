@@ -1,10 +1,12 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
+import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import { editCourse } from "@/core/api";
+import { editCourse, getRoles } from "@/core/api";
 import { Box, Button, Group, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
+import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -22,12 +24,19 @@ export const EditCourseModal = ({
   course,
 }: EditCourseModalProps) => {
   const { t } = useTranslation();
+  const [roles, setRoles] = useState([]);
+  const [search, setSearch] = useState<string>("");
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const initialValues: any = {
     title: "",
     description: "",
     deadline: null,
+    role_ids: [],
   };
 
   const form = useForm({
@@ -48,12 +57,54 @@ export const EditCourseModal = ({
           return null;
         }
       },
+      role_ids: (value) => {
+        if (!value) {
+          return t("form.validate.required");
+        } else {
+          return null;
+        }
+      },
     },
   });
 
   const close = () => {
     onClose();
     form.reset();
+  };
+
+  const loadOptions = async () => {
+    const params = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+      search: search,
+    };
+    setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 });
+    const roles = await getRoles(params);
+    return {
+      options:
+        roles?.data?.map((item: any) => ({
+          value: item.id,
+          label: item.name,
+        })) ?? [],
+      hasMore: roles?.current_page < roles?.last_page ? true : false,
+    };
+  };
+
+  const handleSearchChange = (inputValue: string) => {
+    if (inputValue === "" && search?.length === 1) {
+      setSearch("");
+      setPagination({ ...pagination, pageIndex: 0 });
+    } else {
+      setPagination({ ...pagination, pageIndex: 0 });
+      setSearch(inputValue);
+    }
+  };
+  const handleRolesChange = (option: any) => {
+    form.setFieldValue(
+      "role_ids",
+      option.map((opt: any) => opt.value)
+    );
+    setRoles(option);
   };
 
   const handleSubmit = async (values: any) => {
@@ -84,7 +135,14 @@ export const EditCourseModal = ({
         title: course?.title,
         description: course?.description,
         deadline: dayjs(course.deadline, "YYYY-MM-DD HH:mm").toDate(),
+        role_ids: course?.roles?.map((item: any) => item?.id) || [],
       });
+      setRoles(
+        course?.roles?.map((item: any) => ({
+          value: item?.id,
+          label: item?.name,
+        })) || []
+      );
     }
   }, [open]);
 
@@ -108,6 +166,20 @@ export const EditCourseModal = ({
             placeholder={t("courses.modal.enterDescription")}
             {...form.getInputProps("description")}
             withAsterisk
+          />
+          <AsyncSelect
+            w="100%"
+            mah={300}
+            value={roles}
+            error={form.errors.role_ids}
+            label="Роль"
+            placeholder="Выберите роль"
+            search={search}
+            isMulti
+            isClearable
+            onChange={handleRolesChange}
+            loadOptions={loadOptions}
+            handleSearchChange={handleSearchChange}
           />
           <DateTimePicker
             value={form.values.deadline}

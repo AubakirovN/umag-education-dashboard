@@ -8,9 +8,10 @@ import { IMaskInput } from "react-imask";
 interface IAddUserModal {
   modal: boolean;
   onClose: () => void;
+  setChanges: any;
 }
 
-export const AddUserModal = ({ modal, onClose }: IAddUserModal) => {
+export const AddUserModal = ({ modal, onClose, setChanges }: IAddUserModal) => {
   const { t } = useTranslation();
   const close = () => {
     form.reset();
@@ -58,6 +59,7 @@ export const AddUserModal = ({ modal, onClose }: IAddUserModal) => {
     try {
       await addUser(values).then(() => {
         close();
+        setChanges((prev: any) => !prev);
       });
     } catch (e) {
       console.error(e);
