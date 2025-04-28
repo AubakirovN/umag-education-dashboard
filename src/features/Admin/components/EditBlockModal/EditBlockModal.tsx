@@ -2,11 +2,13 @@ import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
 import { editBlock, getCourses } from "@/core/api";
-import { Box, Button, Group, TextInput } from "@mantine/core";
+import { Box, Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BaseCKEditor } from "../CKEditor/BaseCKEditor";
+import { useParams } from "react-router-dom";
 
 interface EditBlockModalProps {
   open: boolean;
@@ -22,7 +24,7 @@ export const EditBlockModal = ({
   block,
 }: EditBlockModalProps) => {
   const { t } = useTranslation();
-  // const { id } = useParams();
+  const { id } = useParams();
   const [courses, setCourses] = useState([]);
   const [search, setSearch] = useState<string>("");
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -35,7 +37,7 @@ export const EditBlockModal = ({
     title: "",
     description: "",
     number: 0,
-    course_ids: [],
+    course_ids: id ? [id] : [],
     max_attempts: 0,
     pass_count: 0,
   };
@@ -159,7 +161,7 @@ export const EditBlockModal = ({
       opened={open}
       onClose={close}
       title={t("blocks.modal.blockEditting")}
-      scrolling
+      // scrolling
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Box maw={500} mx="auto">
@@ -169,28 +171,36 @@ export const EditBlockModal = ({
             {...form.getInputProps("title")}
             withAsterisk
           />
-          <TextInput
-            label={t("blocks.modal.description")}
-            placeholder={t("blocks.modal.enterDescription")}
-            {...form.getInputProps("description")}
-            withAsterisk
+          <Text fz={14}>
+            Описание блока <span style={{ color: "#fa5252" }}>*</span>
+          </Text>
+          <BaseCKEditor
+            onChange={(e) => {
+              form.setFieldValue("description", e.editor.getData());
+            }}
+            initData={form.values.description}
+            style={{
+              border: form.errors.description
+                ? "1px solid #fa5252"
+                : "1px solid #d1d1d1",
+            }}
           />
-          {/* {!id && ( */}
-          <AsyncSelect
-            w="100%"
-            mah={300}
-            value={courses}
-            error={form.errors.course_ids}
-            label={t("blocks.modal.course")}
-            placeholder={t("blocks.modal.chooseCourse")}
-            search={search}
-            isMulti
-            isClearable
-            onChange={handleCoursesChange}
-            loadOptions={loadOptions}
-            handleSearchChange={handleSearchChange}
-          />
-          {/* )} */}
+          {!id && (
+            <AsyncSelect
+              w="100%"
+              mah={300}
+              value={courses}
+              error={form.errors.course_ids}
+              label={t("blocks.modal.course")}
+              placeholder={t("blocks.modal.chooseCourse")}
+              search={search}
+              isMulti
+              isClearable
+              onChange={handleCoursesChange}
+              loadOptions={loadOptions}
+              handleSearchChange={handleSearchChange}
+            />
+          )}
           <TextInput
             type="number"
             label={t("blocks.modal.number")}

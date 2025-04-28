@@ -1,5 +1,5 @@
 import { deleteCourseBlock, getCourseBlocksById } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -11,8 +11,9 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { IconTrashFilled } from "@tabler/icons-react";
+import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
 import { AddBlockModal } from "../AddBlockModal";
+import { EditBlockModal } from "../EditBlockModal";
 
 export const Course = () => {
   const { id } = useParams();
@@ -20,7 +21,9 @@ export const Course = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [blocks, setBlocks] = useState([]);
+  const [selectedBlock, setSelectedBlock] = useState(null);
   const [modal, setModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => blocks || [], [blocks]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -98,10 +101,18 @@ export const Course = () => {
       {
         header: "Действия",
         Cell: ({ row }) => (
-          <IconTrashFilled
-            style={{ color: "red" }}
-            onClick={() => deleteData(row.original?.id)}
-          />
+          <Flex gap={10}>
+            <IconEdit
+              onClick={() => {
+                setSelectedBlock(row.original);
+                setEditModal(true);
+              }}
+            />
+            <IconTrashFilled
+              style={{ color: "red" }}
+              onClick={() => deleteData(row.original?.id)}
+            />
+          </Flex>
         ),
       },
     ],
@@ -146,6 +157,12 @@ export const Course = () => {
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
+      />
+      <EditBlockModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        setChanges={setChanges}
+        block={selectedBlock}
       />
     </>
   );

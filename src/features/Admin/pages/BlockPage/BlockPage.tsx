@@ -32,7 +32,7 @@ const BlockPage = () => {
           <Breadcrumbs>{items}</Breadcrumbs>
           <Title order={1}>{block?.title}</Title>
           <Text><b>Описание: </b>{block?.description}</Text>
-          <Text><b>Количество блоков:</b> {block?.number}</Text>
+          <Text><b>Номер блока:</b> {block?.number}</Text>
           <Text><b>Количество попыток:</b> {block?.max_attempts}</Text>
           <Text><b>Проходной балл:</b> {block?.pass_count}</Text>
           <Block />

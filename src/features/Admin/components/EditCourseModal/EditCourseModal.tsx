@@ -2,13 +2,14 @@ import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
 import { editCourse, getRoles } from "@/core/api";
-import { Box, Button, Group, TextInput } from "@mantine/core";
+import { Box, Button, Group, Text, TextInput } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { BaseCKEditor } from "../CKEditor/BaseCKEditor";
 
 interface EditCourseModalProps {
   open: boolean;
@@ -161,11 +162,19 @@ export const EditCourseModal = ({
             {...form.getInputProps("title")}
             withAsterisk
           />
-          <TextInput
-            label={t("courses.modal.description")}
-            placeholder={t("courses.modal.enterDescription")}
-            {...form.getInputProps("description")}
-            withAsterisk
+          <Text fz={14}>
+            Описание курса <span style={{ color: "#fa5252" }}>*</span>
+          </Text>
+          <BaseCKEditor
+            onChange={(e) => {
+              form.setFieldValue("description", e.editor.getData());
+            }}
+            initData={form.values.description}
+            style={{
+              border: form.errors.description
+                ? "1px solid #fa5252"
+                : "1px solid #d1d1d1",
+            }}
           />
           <AsyncSelect
             w="100%"

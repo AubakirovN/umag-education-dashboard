@@ -157,10 +157,6 @@ export const EditLessonModal = ({
             loadOptions={loadOptions}
             handleSearchChange={handleSearchChange}
           />
-          {/* )} */}
-          {/* <Text fz={14}>
-              Описание <span style={{ color: "#fa5252" }}>*</span>
-            </Text> */}
           <Flex mt={10}>
             <BaseCKEditor
               onChange={(e) => {
@@ -178,7 +174,6 @@ export const EditLessonModal = ({
             label="Видео"
             placeholder="Введите ссылку"
             {...form.getInputProps("video_url")}
-            // withAsterisk
           />
           <Group m="md" spacing="xs" position="right">
             <Button color="red" onClick={close}>

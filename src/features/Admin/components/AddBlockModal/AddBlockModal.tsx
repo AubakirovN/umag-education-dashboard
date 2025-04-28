@@ -2,12 +2,13 @@ import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
 import { createBlock, getCourses } from "@/core/api";
-import { Box, Button, Group, TextInput } from "@mantine/core";
+import { Box, Button, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { BaseCKEditor } from "../CKEditor/BaseCKEditor";
 
 interface AddBlockModalProps {
   open: boolean;
@@ -140,7 +141,7 @@ export const AddBlockModal = ({
       opened={open}
       onClose={close}
       title={t("blocks.modal.blockCreating")}
-      scrolling
+      // scrolling
     >
       <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
         <Box maw={500} mx="auto">
@@ -157,11 +158,19 @@ export const AddBlockModal = ({
             {...form.getInputProps("number")}
             withAsterisk
           />
-          <TextInput
-            label={t("blocks.modal.description")}
-            placeholder={t("blocks.modal.enterDescription")}
-            {...form.getInputProps("description")}
-            withAsterisk
+          <Text fz={14}>
+            Описание блока <span style={{ color: "#fa5252" }}>*</span>
+          </Text>
+          <BaseCKEditor
+            onChange={(e) => {
+              form.setFieldValue("description", e.editor.getData());
+            }}
+            initData={form.values.description}
+            style={{
+              border: form.errors.description
+                ? "1px solid #fa5252"
+                : "1px solid #d1d1d1",
+            }}
           />
           {!id && (
             <AsyncSelect
