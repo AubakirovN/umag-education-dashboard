@@ -1,6 +1,6 @@
-import { getRoles } from "@/core/api";
+import { deleteRole, getRoles } from "@/core/api";
 // import { deleteCourse, getCourses, getRoles } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex } from "@mantine/core";
 // import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
@@ -17,14 +17,16 @@ import { useTranslation } from "react-i18next";
 // import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
 // import { EditCourseModal } from "../EditCourseModal";
 import { AddRoleModal } from "../AddRoleModal";
+import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
+import { EditRoleModal } from "../EditRoleModal";
 
 export const Roles = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [roles, setRoles] = useState([]);
-  // const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedRole, setSelectedRole] = useState(null);
   const [modal, setModal] = useState(false);
-  // const [editModal, setEditModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
   const data: any[] = useMemo(() => roles || [], [roles]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -50,17 +52,17 @@ export const Roles = () => {
     }
   };
 
-  // const deleteData = async (id: string) => {
-  //   setIsLoading(true);
-  //   try {
-  //     await deleteCourse(id);
-  //     setChanges((prev) => !prev);
-  //   } catch (e) {
-  //     console.error(e);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const deleteData = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await deleteRole(id);
+      setChanges((prev) => !prev);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -78,7 +80,24 @@ export const Roles = () => {
       },
       {
         header: "Статус",
-        accessorKey: "active"
+        accessorKey: "active",
+      },
+      {
+        header: "Действия",
+        Cell: ({ row }) => (
+          <Flex gap={10}>
+            <IconEdit
+              onClick={() => {
+                setSelectedRole(row.original);
+                setEditModal(true);
+              }}
+            />
+            <IconTrashFilled
+              style={{ color: "red" }}
+              onClick={() => deleteData(row.original?.id)}
+            />
+          </Flex>
+        ),
       },
     ],
     [t]
@@ -122,6 +141,12 @@ export const Roles = () => {
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
+      />
+      <EditRoleModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        setChanges={setChanges}
+        role={selectedRole}
       />
     </>
   );
