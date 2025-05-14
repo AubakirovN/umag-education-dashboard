@@ -7,7 +7,6 @@ export const addUser = async (body: AddUserDto): Promise<any> => {
   return response.data;
 };
 export const importUsers = async (file: any): Promise<any> => {
-  console.log(file);
   const response = await axios.post<any>(
     `${baseUrl}/import-phones-roles`,
     { file },

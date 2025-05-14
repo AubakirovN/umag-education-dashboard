@@ -32,7 +32,11 @@ export const deleteCourseBlock = async (id: string): Promise<any> => {
   return response.data;
 };
 export const createCourse = async (body: any) => {
-  const response = await axios.post(`${baseUrl}/courses`, body);
+  const response = await axios.post(`${baseUrl}/courses`, body, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 export const editCourse = async (courseId: string, body: any) => {
@@ -78,7 +82,7 @@ export const createLesson = async (body: any): Promise<any> => {
 export const editLesson = async (lessonId: string, body: any): Promise<any> => {
   const response = await axios.put(`${baseUrl}/lessons/${lessonId}`, body);
   return response.data;
-}
+};
 export const createTest = async (body: any): Promise<any> => {
   const response = await axios.post(`${baseUrl}/test-questions`, body);
   return response.data;
@@ -94,7 +98,7 @@ export const getTests = async (params: any): Promise<any> => {
 export const getTest = async (id: string) => {
   const response = await axios.get(`${baseUrl}/test-questions/${id}`);
   return response.data;
-}
+};
 export const deleteTest = async (id: string) => {
   const response = await axios.delete(`${baseUrl}/test-questions/${id}`);
   return response.data;

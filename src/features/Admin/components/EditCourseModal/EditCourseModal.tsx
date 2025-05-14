@@ -2,7 +2,16 @@ import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
 import { editCourse, getRoles } from "@/core/api";
-import { Box, Button, Group, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  FileButton,
+  Flex,
+  Group,
+  Image,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
@@ -26,6 +35,7 @@ export const EditCourseModal = ({
 }: EditCourseModalProps) => {
   const { t } = useTranslation();
   const [roles, setRoles] = useState([]);
+  const [preview, setPreview] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
@@ -38,6 +48,7 @@ export const EditCourseModal = ({
     description: "",
     deadline: null,
     role_ids: [],
+    image: "",
   };
 
   const form = useForm({
@@ -100,6 +111,16 @@ export const EditCourseModal = ({
       setSearch(inputValue);
     }
   };
+
+  const handleImageChange = (file: File | null) => {
+    form.setFieldValue("image", file);
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+    }
+  };
+
   const handleRolesChange = (option: any) => {
     form.setFieldValue(
       "role_ids",
@@ -109,18 +130,18 @@ export const EditCourseModal = ({
   };
 
   const handleSubmit = async (values: any) => {
-    if (!values?.deadline) {
-      delete values?.deadline;
-    }
     const formattedDeadline = dayjs(values.deadline).format("YYYY-MM-DD HH:mm");
-    const payload = {
-      ...values,
-      deadline: formattedDeadline,
-    };
+
+    const formData = new FormData();
+    formData.append("title", values?.title);
+    formData.append("description", values?.description);
+    formData.append("role_ids", values?.role_ids);
+    formData.append("deadline", formattedDeadline);
+    formData.append("image", values?.image);
 
     setIsLoading(true);
     try {
-      await editCourse(course?.id, payload);
+      await editCourse(course?.id, formData);
       close();
       setChanges((prev) => !prev);
     } catch (e) {
@@ -137,7 +158,9 @@ export const EditCourseModal = ({
         description: course?.description,
         deadline: dayjs(course.deadline, "YYYY-MM-DD HH:mm").toDate(),
         role_ids: course?.roles?.map((item: any) => item?.id) || [],
+        image: course?.image_url,
       });
+      setPreview(course?.image_url);
       setRoles(
         course?.roles?.map((item: any) => ({
           value: item?.id,
@@ -152,7 +175,6 @@ export const EditCourseModal = ({
       opened={open}
       onClose={close}
       title={t("courses.modal.courseEditting")}
-      scrolling
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Box maw={500} mx="auto">
@@ -203,6 +225,19 @@ export const EditCourseModal = ({
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
           />
+          <Flex direction="column" mt={10} gap={10}>
+            {preview && (
+              <Image src={preview} alt="course icon" maw={200} radius="md" />
+            )}
+            <Flex>
+              <FileButton
+                onChange={handleImageChange}
+                accept="image/png,image/jpeg"
+              >
+                {(props) => <Button {...props}>Загрузить изображение</Button>}
+              </FileButton>
+            </Flex>
+          </Flex>
           <Group m="md" spacing="xs" position="right">
             <Button color="red" onClick={close}>
               {t("buttons.cancel")}

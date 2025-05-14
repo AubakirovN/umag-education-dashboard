@@ -3,7 +3,16 @@ import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
 import { createCourse, getRoles } from "@/core/api";
 import { formatYMDHM } from "@/core/format";
-import { Box, Button, Group, Text, TextInput } from "@mantine/core";
+import {
+  Box,
+  Button,
+  FileButton,
+  Flex,
+  Group,
+  Image,
+  Text,
+  TextInput,
+} from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
@@ -24,6 +33,7 @@ export const AddCourseModal = ({
 }: AddCourseModalProps) => {
   const { t } = useTranslation();
   const [roles, setRoles] = useState([]);
+  const [preview, setPreview] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
@@ -36,6 +46,7 @@ export const AddCourseModal = ({
     description: "",
     role_ids: [],
     deadline: "",
+    image: "",
   };
 
   const form = useForm({
@@ -68,6 +79,7 @@ export const AddCourseModal = ({
 
   const close = () => {
     form.reset();
+    setPreview(null);
     onClose();
   };
 
@@ -99,8 +111,16 @@ export const AddCourseModal = ({
     }
   };
 
+  const handleImageChange = (file: File | null) => {
+    form.setFieldValue("image", file);
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+    }
+  };
+
   const handleRolesChange = (option: any) => {
-    console.log(option);
     form.setFieldValue(
       "role_ids",
       option.map((opt: any) => opt.value)
@@ -109,13 +129,20 @@ export const AddCourseModal = ({
   };
 
   const handleSubmit = async (values: any) => {
+    const formData = new FormData();
+    formData.append("title", values?.title);
+    formData.append("description", values?.description);
+    formData.append("role_ids", values?.role_ids);
+    formData.append("image", values?.image);
     if (!values?.deadline) {
       delete values?.deadline;
+    } else {
+    formData.append("deadline", values?.deadline);
     }
 
     setIsLoading(true);
     try {
-      await createCourse(values);
+      await createCourse(formData);
       close();
       setChanges((prev) => !prev);
     } catch (e) {
@@ -130,7 +157,7 @@ export const AddCourseModal = ({
       opened={open}
       onClose={close}
       title={t("courses.modal.courseCreating")}
-      scrolling
+      // scrolling
     >
       <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
         <Box maw={500} mx="auto">
@@ -156,7 +183,7 @@ export const AddCourseModal = ({
           />
           <AsyncSelect
             w="100%"
-            mah={300}
+            mah={150}
             value={roles}
             error={form.errors.role_ids}
             label="Роль"
@@ -180,6 +207,17 @@ export const AddCourseModal = ({
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
           />
+          <Flex direction="column" mt={10} gap={10}>
+            <Flex>
+              <FileButton
+                onChange={handleImageChange}
+                accept="image/png,image/jpeg,image/jpg"
+              >
+                {(props) => <Button {...props}>Загрузить изображение</Button>}
+              </FileButton>
+            </Flex>
+            {preview && <Image src={preview} alt="course icon" maw={200} />}
+          </Flex>
           <Group m="md" spacing="xs" position="right">
             <Button color="red" onClick={close}>
               {t("buttons.cancel")}

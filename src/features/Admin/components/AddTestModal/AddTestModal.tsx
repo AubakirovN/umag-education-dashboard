@@ -10,7 +10,7 @@ import {
   Group,
   TextInput,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
+import { UseFormReturnType, useForm } from "@mantine/form";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -42,13 +42,15 @@ export const AddTestModal = ({
 
   const initialValues: any = {
     question: "",
+    is_correct: null,
     answers: [{ name: "", is_correct: false, key: randomId() }],
     course_block_ids: id ? [id] : [],
   };
 
-  const form = useForm({
+  const form: UseFormReturnType<any> = useForm({
     initialValues: initialValues,
     validateInputOnBlur: true,
+    validateInputOnChange: true,
     validate: {
       question: (value) => {
         if (!value) {
@@ -70,6 +72,12 @@ export const AddTestModal = ({
           return null;
         });
         return errors.filter(Boolean).length > 0 ? errors : null;
+      },
+      is_correct: () => {
+        const hasCorrect: boolean = form.values.answers?.some(
+          (item: any) => item.is_correct === true
+        );
+        return hasCorrect ? null : true;
       },
     },
   });
@@ -108,6 +116,7 @@ export const AddTestModal = ({
   };
 
   const handleSubmit = async (values: any) => {
+    delete values.is_correct;
     setIsLoading(true);
     try {
       await createTest(values);
@@ -127,6 +136,8 @@ export const AddTestModal = ({
     );
     setCourseBlocks(option);
   };
+
+  console.log(form.errors);
 
   const fields = form.values.answers?.map((item: any, i: number) => {
     const index = form.values.answers?.findIndex(
@@ -152,8 +163,10 @@ export const AddTestModal = ({
         <Checkbox
           sx={{ flex: 1 }}
           checked={form.values.answers?.[index]?.is_correct}
+          error={form.errors.is_correct}
           onChange={(e) => {
             form.setFieldValue(`answers.${index}.is_correct`, e.target.checked);
+            form.clearFieldError("is_correct");
           }}
         />
         <ActionIcon
@@ -169,8 +182,8 @@ export const AddTestModal = ({
   });
 
   return (
-    <CustomModal opened={open} onClose={close} title="Создание теста" scrolling>
-      <form onSubmit={form.onSubmit(handleSubmit)} className="wws">
+    <CustomModal opened={open} onClose={close} title="Создание теста">
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Box maw={500} mx="auto">
           <Flex direction="column" gap={10}>
             <TextInput
