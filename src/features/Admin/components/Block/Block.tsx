@@ -10,7 +10,7 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { IconTrashFilled } from "@tabler/icons-react";
 import { AddLessonModal } from "../AddLessonModal";
 import { AddTestModal } from "../AddTestModal";
@@ -85,9 +85,18 @@ export const Block = () => {
         },
       },
       {
-        enableClickToCopy: true,
         header: "Ссылка на видео",
-        accessorKey: "number",
+        Cell: ({ row }) => (
+          <>
+            {row.original?.video_url ? (
+              <Link to={row.original?.video_url} target="_blank">
+                {row.original?.video_url}
+              </Link>
+            ) : (
+              "-"
+            )}
+          </>
+        ),
       },
       {
         header: "Действия",
