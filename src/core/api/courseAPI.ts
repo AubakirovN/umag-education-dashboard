@@ -40,7 +40,11 @@ export const createCourse = async (body: any) => {
   return response.data;
 };
 export const editCourse = async (courseId: string, body: any) => {
-  const response = await axios.put(`${baseUrl}/courses/${courseId}`, body);
+  const response = await axios.put(`${baseUrl}/courses/${courseId}`, body, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 export const createBlock = async (body: any) => {

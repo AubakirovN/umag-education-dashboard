@@ -31,7 +31,7 @@ const CoursePage = () => {
         <Stack>
           <Breadcrumbs>{items}</Breadcrumbs>
           <Title order={1}>{course?.title}</Title>
-          <Text>{course?.description}</Text>
+          <div dangerouslySetInnerHTML={{__html: course?.description}} />
           <Course />
         </Stack>
       )}
