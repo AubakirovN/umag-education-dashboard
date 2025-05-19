@@ -1,4 +1,4 @@
-import { Anchor, Breadcrumbs, Stack, Text, Title } from "@mantine/core";
+import { Anchor, Breadcrumbs, Stack, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
