@@ -2,7 +2,6 @@ import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
 import { createCourse, getRoles } from "@/core/api";
-import { formatYMDHM } from "@/core/format";
 import {
   Box,
   Button,
@@ -13,7 +12,6 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useState } from "react";

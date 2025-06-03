@@ -4,10 +4,9 @@ import { CustomModal } from "@/components/CustomModal";
 import {
   editBlock,
   getCourseBlockById,
-  getCourseBlocksById,
   getCourses,
 } from "@/core/api";
-import { Box, Button, Flex, Grid, Group, Text, TextInput } from "@mantine/core";
+import { Box, Button, Flex, Grid, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
