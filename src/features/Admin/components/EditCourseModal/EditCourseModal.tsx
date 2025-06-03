@@ -12,9 +12,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
-import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
-import dayjs from "dayjs";
 import { MRT_PaginationState } from "mantine-react-table";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -46,7 +44,8 @@ export const EditCourseModal = ({
   const initialValues: any = {
     title: "",
     description: "",
-    deadline: null,
+    description_extra: "",
+    duration: 0,
     role_ids: [],
     image: "",
   };
@@ -63,6 +62,20 @@ export const EditCourseModal = ({
         }
       },
       description: (value) => {
+        if (!value) {
+          return t("form.validate.required");
+        } else {
+          return null;
+        }
+      },
+      description_extra: (value) => {
+        if (!value) {
+          return t("form.validate.required");
+        } else {
+          return null;
+        }
+      },
+      duration: (value) => {
         if (!value) {
           return t("form.validate.required");
         } else {
@@ -130,13 +143,14 @@ export const EditCourseModal = ({
   };
 
   const handleSubmit = async (values: any) => {
-    const formattedDeadline = dayjs(values.deadline).format("YYYY-MM-DD HH:mm");
+    // const formattedDeadline = dayjs(values.deadline).format("YYYY-MM-DD HH:mm");
 
     const formData = new FormData();
     formData.append("title", values?.title);
     formData.append("description", values?.description);
+    formData.append("description_extra", values?.description_extra);
     formData.append("role_ids", values?.role_ids);
-    formData.append("deadline", formattedDeadline);
+    formData.append("duration", values?.duration);
     formData.append("image", values?.image);
 
     setIsLoading(true);
@@ -156,7 +170,9 @@ export const EditCourseModal = ({
       form.setValues({
         title: course?.title,
         description: course?.description,
-        deadline: dayjs(course.deadline, "YYYY-MM-DD HH:mm").toDate(),
+        description_extra: course?.description_extra,
+        duration: course?.duration,
+        // deadline: dayjs(course.deadline, "YYYY-MM-DD HH:mm").toDate(),
         role_ids: course?.roles?.map((item: any) => item?.id) || [],
         image: course?.image_url,
       });
@@ -198,6 +214,27 @@ export const EditCourseModal = ({
                 : "1px solid #d1d1d1",
             }}
           />
+          <Text fz={14}>
+            Дополнительное описание <span style={{ color: "#fa5252" }}>*</span>
+          </Text>
+          <BaseCKEditor
+            onChange={(e) => {
+              form.setFieldValue("description_extra", e.editor.getData());
+            }}
+            initData={form.values.description_extra}
+            style={{
+              border: form.errors.description_extra
+                ? "1px solid #fa5252"
+                : "1px solid #d1d1d1",
+            }}
+          />
+          <TextInput
+            type="number"
+            label="Длительность"
+            placeholder="Введите длительность в месяцах"
+            {...form.getInputProps("duration")}
+            withAsterisk
+          />
           <AsyncSelect
             w="100%"
             mah={300}
@@ -212,7 +249,7 @@ export const EditCourseModal = ({
             loadOptions={loadOptions}
             handleSearchChange={handleSearchChange}
           />
-          <DateTimePicker
+          {/* <DateTimePicker
             value={form.values.deadline}
             label={t("courses.modal.deadline")}
             placeholder={t("courses.modal.enterDeadline")}
@@ -224,7 +261,7 @@ export const EditCourseModal = ({
             mx="auto"
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
-          />
+          /> */}
           <Flex direction="column" mt={10} gap={10}>
             {preview && (
               <Image src={preview} alt="course icon" maw={200} radius="md" />
