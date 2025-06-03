@@ -27,6 +27,10 @@ export const getCourseBlocksById = async (
   );
   return response.data;
 };
+export const getCourseBlockById = async (id: string) => {
+  const response = await axios.get<any>(`${baseUrl}/course-blocks/${id}`);
+  return response.data;
+};
 export const deleteCourseBlock = async (id: string): Promise<any> => {
   const response = await axios.delete<any>(`${baseUrl}/course-blocks/${id}`);
   return response.data;

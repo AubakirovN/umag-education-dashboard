@@ -107,18 +107,6 @@ export const Blocks = () => {
         },
       },
       {
-        header: t("blocks.table.number"),
-        accessorKey: "number",
-      },
-      {
-        header: t("blocks.table.maxAttempts"),
-        accessorKey: "max_attempts",
-      },
-      {
-        header: t("blocks.table.passCount"),
-        accessorKey: "pass_count",
-      },
-      {
         header: "Действия",
         Cell: ({ row }) => (
           <Flex gap={10}>

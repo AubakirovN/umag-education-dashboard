@@ -44,8 +44,9 @@ export const AddCourseModal = ({
   const initialValues: any = {
     title: "",
     description: "",
+    description_extra: "",
+    duration: 0,
     role_ids: [],
-    deadline: "",
     image: "",
   };
 
@@ -68,6 +69,20 @@ export const AddCourseModal = ({
         }
       },
       description: (value) => {
+        if (!value) {
+          return t("form.validate.required");
+        } else {
+          return null;
+        }
+      },
+      description_extra: (value) => {
+        if (!value) {
+          return t("form.validate.required");
+        } else {
+          return null;
+        }
+      },
+      duration: (value) => {
         if (!value) {
           return t("form.validate.required");
         } else {
@@ -132,13 +147,15 @@ export const AddCourseModal = ({
     const formData = new FormData();
     formData.append("title", values?.title);
     formData.append("description", values?.description);
+    formData.append("description_extra", values?.description_extra);
     formData.append("role_ids", values?.role_ids);
+    formData.append("duration", values?.duration);
     formData.append("image", values?.image);
-    if (!values?.deadline) {
-      delete values?.deadline;
-    } else {
-    formData.append("deadline", values?.deadline);
-    }
+    // if (!values?.deadline) {
+    //   delete values?.deadline;
+    // } else {
+    // formData.append("deadline", values?.deadline);
+    // }
 
     setIsLoading(true);
     try {
@@ -181,6 +198,26 @@ export const AddCourseModal = ({
                 : "1px solid #d1d1d1",
             }}
           />
+          <Text fz={14}>
+            Дополнительное описание <span style={{ color: "#fa5252" }}>*</span>
+          </Text>
+          <BaseCKEditor
+            onChange={(e) => {
+              form.setFieldValue("description_extra", e.editor.getData());
+            }}
+            initData={form.values.description_extra}
+            style={{
+              border: form.errors.description_extra
+                ? "1px solid #fa5252"
+                : "1px solid #d1d1d1",
+            }}
+          />
+          <TextInput
+            label="Длительность"
+            placeholder="Введите длительность в месяцах"
+            {...form.getInputProps("duration")}
+            withAsterisk
+          />
           <AsyncSelect
             w="100%"
             mah={150}
@@ -195,7 +232,7 @@ export const AddCourseModal = ({
             loadOptions={loadOptions}
             handleSearchChange={handleSearchChange}
           />
-          <DateTimePicker
+          {/* <DateTimePicker
             label={t("courses.modal.deadline")}
             placeholder={t("courses.modal.enterDeadline")}
             onChange={(e: any) => {
@@ -206,7 +243,7 @@ export const AddCourseModal = ({
             mx="auto"
             onPointerEnterCapture={undefined}
             onPointerLeaveCapture={undefined}
-          />
+          /> */}
           <Flex direction="column" mt={10} gap={10}>
             <Flex>
               <FileButton

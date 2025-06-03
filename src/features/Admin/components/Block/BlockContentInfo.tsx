@@ -1,5 +1,5 @@
 import { deleteLesson, getLessonsById } from "@/core/api";
-import { Button } from "@mantine/core";
+import { Button, Flex, Text } from "@mantine/core";
 import {
   MRT_ColumnDef,
   MRT_PaginationState,
@@ -15,7 +15,7 @@ import { IconTrashFilled } from "@tabler/icons-react";
 import { AddLessonModal } from "../AddLessonModal";
 import { AddTestModal } from "../AddTestModal";
 
-export const Block = () => {
+export const BlockContentInfo = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -144,6 +144,9 @@ export const Block = () => {
   });
   return (
     <>
+    <Flex direction='column' align='center'>
+      <Text fz={24}>Список уроков</Text>
+    </Flex>
       <MantineReactTable table={table} />
       <AddLessonModal
         open={lessonModal}

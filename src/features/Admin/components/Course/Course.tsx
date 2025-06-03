@@ -88,15 +88,15 @@ export const Course = () => {
       },
       {
         header: t("blocks.table.number"),
-        accessorKey: "number",
+        accessorKey: "pivot.block_number",
       },
       {
         header: t("blocks.table.maxAttempts"),
-        accessorKey: "max_attempts",
+        accessorKey: "pivot.max_attempts",
       },
       {
         header: t("blocks.table.passCount"),
-        accessorKey: "pass_count",
+        accessorKey: "pivot.pass_count",
       },
       {
         header: "Действия",

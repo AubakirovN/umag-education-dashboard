@@ -1,1 +1,2 @@
-export * from "./Block";
+export * from "./BlockContentInfo";
+export * from "./BlockCourseInfo";

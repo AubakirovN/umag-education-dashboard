@@ -3,7 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getBlock } from "@/core/api";
-import { Block } from "../../components/Block";
+import {
+  BlockContentInfo,
+  BlockCourseInfo,
+} from "../../components/Block";
 
 const BlockPage = () => {
   const { id } = useParams();
@@ -11,7 +14,10 @@ const BlockPage = () => {
   const [block, setBlock] = useState<any>();
   const items = [
     { title: t("breadcrumbs.main"), href: "/app" },
-    { title: t("breadcrumbs.blocks"), href: `/app/courses/${block?.course_id}` },
+    {
+      title: t("breadcrumbs.blocks"),
+      href: `/app/courses/${block?.course_id}`,
+    },
     { title: block?.title, href: `/app/blocks/${block?.id}` },
   ].map((item, index) => (
     <Anchor href={item.href} key={index}>
@@ -31,11 +37,9 @@ const BlockPage = () => {
         <Stack>
           <Breadcrumbs>{items}</Breadcrumbs>
           <Title order={1}>{block?.title}</Title>
-          <div dangerouslySetInnerHTML={{__html: block?.description}} />
-          <Text><b>Номер блока:</b> {block?.number}</Text>
-          <Text><b>Количество попыток:</b> {block?.max_attempts}</Text>
-          <Text><b>Проходной балл:</b> {block?.pass_count}</Text>
-          <Block />
+          <div dangerouslySetInnerHTML={{ __html: block?.description }} />
+          <BlockCourseInfo block={block} />
+          <BlockContentInfo />
         </Stack>
       )}
     </>

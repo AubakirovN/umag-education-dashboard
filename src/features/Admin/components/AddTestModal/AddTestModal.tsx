@@ -137,8 +137,6 @@ export const AddTestModal = ({
     setCourseBlocks(option);
   };
 
-  console.log(form.errors);
-
   const fields = form.values.answers?.map((item: any, i: number) => {
     const index = form.values.answers?.findIndex(
       (el: any) => el.key === item.key
