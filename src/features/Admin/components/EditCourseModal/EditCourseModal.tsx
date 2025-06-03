@@ -144,15 +144,15 @@ export const EditCourseModal = ({
 
   const handleSubmit = async (values: any) => {
     // const formattedDeadline = dayjs(values.deadline).format("YYYY-MM-DD HH:mm");
-
     const formData = new FormData();
     formData.append("title", values?.title);
     formData.append("description", values?.description);
     formData.append("description_extra", values?.description_extra);
     formData.append("role_ids", values?.role_ids);
     formData.append("duration", values?.duration);
-    formData.append("image", values?.image);
-
+    if (values.image instanceof File) {
+      formData.append("image", values?.image);
+    }
     setIsLoading(true);
     try {
       await editCourse(course?.id, formData);
