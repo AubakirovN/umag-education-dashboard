@@ -69,6 +69,12 @@ export const getLessons = async (params: any) => {
   });
   return response.data;
 };
+export const getSublessons = async (params: any) => {
+  const response = await axios.get(`${baseUrl}/sublessons`, {
+    params,
+  });
+  return response.data;
+};
 export const getLessonsById = async (id: string, params: any) => {
   const response = await axios.get(`${baseUrl}/lessons?course-block-id=${id}`, {
     params,
@@ -83,12 +89,24 @@ export const deleteLesson = async (id: string) => {
   const response = await axios.delete(`${baseUrl}/lessons/${id}`);
   return response.data;
 };
+export const deleteSublesson = async (id: string) => {
+  const response = await axios.delete(`${baseUrl}/sublessons/${id}`);
+  return response.data;
+};
 export const createLesson = async (body: any): Promise<any> => {
   const response = await axios.post(`${baseUrl}/lessons`, body);
   return response.data;
 };
+export const createSublesson = async (body: any): Promise<any> => {
+  const response = await axios.post(`${baseUrl}/sublessons`, body);
+  return response.data;
+};
 export const editLesson = async (lessonId: string, body: any): Promise<any> => {
   const response = await axios.put(`${baseUrl}/lessons/${lessonId}`, body);
+  return response.data;
+};
+export const editSublesson = async (sublessonId: string, body: any): Promise<any> => {
+  const response = await axios.put(`${baseUrl}/sublessons/${sublessonId}`, body);
   return response.data;
 };
 export const createTest = async (body: any): Promise<any> => {

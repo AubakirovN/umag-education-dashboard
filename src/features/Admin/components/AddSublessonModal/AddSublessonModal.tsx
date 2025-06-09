@@ -1,29 +1,30 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { CustomModal } from "@/components/CustomModal";
-import { createLesson, getCourseBlocks } from "@/core/api";
-import { Box, Button, Flex, Group, TextInput } from "@mantine/core";
+import { createSublesson, getLessons } from "@/core/api";
+import { Box, Button, Flex, Group, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { BaseCKEditor } from "../CKEditor/BaseCKEditor";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { MRT_PaginationState } from "mantine-react-table";
 
-interface AddLessonModalProps {
+interface AddSublessonModalProps {
   open: boolean;
   onClose: () => void;
   setChanges: Dispatch<SetStateAction<boolean>>;
 }
 
-export const AddLessonModal = ({
+export const AddSublessonModal = ({
   open,
   onClose,
   setChanges,
-}: AddLessonModalProps) => {
+}: AddSublessonModalProps) => {
   const { id } = useParams();
   const { t } = useTranslation();
-  const [courseBlocks, setCourseBlocks] = useState([]);
   const [search, setSearch] = useState<string>("");
+  const [lesson, setLesson] = useState();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15,
@@ -32,7 +33,9 @@ export const AddLessonModal = ({
 
   const initialValues: any = {
     title: "",
-    course_block_ids: id ? [id] : [],
+    description: "",
+    video_url: "",
+    lesson_id: id ? id : '',
   };
 
   const form = useForm({
@@ -69,7 +72,7 @@ export const AddLessonModal = ({
   const handleSubmit = async (values: any) => {
     setIsLoading(true);
     try {
-      await createLesson(values);
+      await createSublesson(values);
       close();
       setChanges((prev) => !prev);
     } catch (e) {
@@ -86,14 +89,14 @@ export const AddLessonModal = ({
       search: search,
     };
     setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 });
-    const blocks = await getCourseBlocks(params);
+    const lessons = await getLessons(params);
     return {
       options:
-        blocks?.data?.map((item: any) => ({
+        lessons?.data?.map((item: any) => ({
           value: item.id,
           label: item.title,
         })) ?? [],
-      hasMore: blocks?.current_page < blocks?.last_page ? true : false,
+      hasMore: lessons?.current_page < lessons?.last_page ? true : false,
     };
   };
 
@@ -107,26 +110,24 @@ export const AddLessonModal = ({
     }
   };
 
-  const handleBlocksChange = (option: any) => {
-    form.setFieldValue(
-      "course_block_ids",
-      option.map((opt: any) => opt.value)
-    );
-    setCourseBlocks(option);
-  };
+  console.log(form.values)
+  const handleLessonChange = (e: any) => {
+    setLesson(e);
+    form.setFieldValue('lesson_id', e.value)
+  }
 
   return (
     <CustomModal
       opened={open}
       onClose={close}
-      title={t("lessons.modal.lessonCreating")}
+      title="Создание темы"
       scrolling
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Box maw={500} mx="auto">
           <Flex direction="column" gap={10}>
             <TextInput
-              label="Название урока"
+              label="Название темы"
               placeholder="Введите название"
               {...form.getInputProps("title")}
               withAsterisk
@@ -135,21 +136,39 @@ export const AddLessonModal = ({
               <AsyncSelect
                 w="100%"
                 mah={300}
-                value={courseBlocks}
-                error={form.errors.course_block_id}
-                label={t("lessons.modal.courseBlock")}
-                placeholder={t("lessons.modal.chooseCourseBlock")}
-                isMulti
+                error={form.errors.lesson_id}
+                value={lesson || ''}
+                label="Урок"
+                placeholder="Выберите урок"
                 search={search}
                 isClearable
-                onChange={handleBlocksChange}
+                onChange={handleLessonChange}
                 loadOptions={loadOptions}
                 handleSearchChange={handleSearchChange}
               />
             )}
-            {/* <Text fz={14}>
+            <Text fz={14}>
               Описание <span style={{ color: "#fa5252" }}>*</span>
-            </Text> */}
+            </Text>
+            <Flex mt={10}>
+              <BaseCKEditor
+                onChange={(e) => {
+                  form.setFieldValue("description", e.editor.getData());
+                }}
+                initData={form.values.description}
+                style={{
+                  border: form.errors.description
+                    ? "1px solid #fa5252"
+                    : "1px solid #d1d1d1",
+                }}
+              />
+            </Flex>
+            <TextInput
+              label="Видео"
+              placeholder="Введите ссылку"
+              {...form.getInputProps("video_url")}
+              // withAsterisk
+            />
           </Flex>
           <Group m="md" spacing="xs" position="right">
             <Button color="red" onClick={close}>

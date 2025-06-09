@@ -85,20 +85,6 @@ export const BlockContentInfo = () => {
         },
       },
       {
-        header: "Ссылка на видео",
-        Cell: ({ row }) => (
-          <>
-            {row.original?.video_url ? (
-              <Link to={row.original?.video_url} target="_blank">
-                {row.original?.video_url}
-              </Link>
-            ) : (
-              "-"
-            )}
-          </>
-        ),
-      },
-      {
         header: "Действия",
         Cell: ({ row }) => (
           <IconTrashFilled

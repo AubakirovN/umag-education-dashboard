@@ -52,6 +52,11 @@ export const appNavbarCategories: AppNavbarCategory[] = [
     link: "/app/lessons",
   },
   {
+    translationKey: "Темы",
+    icon: IconBuilding,
+    link: "/app/sublessons",
+  },
+  {
     translationKey: "appNavbar.tests",
     icon: IconHome2,
     link: "/app/tests",

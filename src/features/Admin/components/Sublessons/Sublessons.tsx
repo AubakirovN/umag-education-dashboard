@@ -1,4 +1,7 @@
-import { deleteLesson, getLessons } from "@/core/api";
+import {
+  deleteSublesson,
+  getSublessons,
+} from "@/core/api";
 import { Button, Flex } from "@mantine/core";
 import {
   MRT_ColumnDef,
@@ -10,21 +13,20 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IconEdit, IconTrashFilled } from "@tabler/icons-react";
-import { AddLessonModal } from "../AddLessonModal";
-import { EditLessonModal } from "../EditLessonModal";
+import { AddSublessonModal } from "../AddSublessonModal";
+import { EditSublessonModal } from "../EditSublessonModal";
 
-export const Lessons = () => {
+export const Sublessons = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [lessons, setLessons] = useState([]);
-  const [selectedLesson, setSelectedLesson] = useState(null);
+  const [sublessons, setSublessons] = useState([]);
+  const [selectedSublesson, setSelectedSublesson] = useState(null);
   const [modal, setModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [changes, setChanges] = useState(false);
-  const data: any[] = useMemo(() => lessons || [], [lessons]);
+  const data: any[] = useMemo(() => sublessons || [], [sublessons]);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15,
@@ -38,8 +40,8 @@ export const Lessons = () => {
       perPage: pagination.pageSize,
     };
     try {
-      const response = await getLessons(params);
-      setLessons(response?.data);
+      const response = await getSublessons(params);
+      setSublessons(response?.data);
       setTotalRowCount(response?.total);
     } catch (e) {
       console.error(e);
@@ -51,7 +53,7 @@ export const Lessons = () => {
   const deleteItem = async (id: string) => {
     setIsLoading(true);
     try {
-      await deleteLesson(id);
+      await deleteSublesson(id);
       setChanges((prev) => !prev);
     } catch (e) {
       console.error(e);
@@ -71,44 +73,26 @@ export const Lessons = () => {
         accessorKey: "id",
       },
       {
-        header: "Название урока",
+        header: "Название темы",
         accessorKey: "title",
-        Cell: ({ cell }) => {
-          return (
-            <div>
-              <Button
-                p={0}
-                variant="subtle"
-                onClick={() =>
-                  navigate(`/app/lessons/${cell.row.original?.id}`)
-                }
-              >
-                {cell.row.original.title}
-              </Button>
-            </div>
-          );
-        },
       },
       {
-        header: "Блок",
-        Cell: ({ cell }) => {
-          return (
-            <>
-              {cell.row.original?.course_blocks?.map(
-                (block: any, key: number) => (
-                  <Button
-                    key={key}
-                    p={0}
-                    variant="subtle"
-                    onClick={() => navigate(`/app/blocks/${block?.id}`)}
-                  >
-                    {block?.title}
-                  </Button>
-                )
-              )}
-            </>
-          );
-        },
+        header: "Урок",
+        accessorKey: "lesson.title",
+      },
+      {
+        header: "Ссылка на видео",
+        Cell: ({ row }) => (
+          <>
+            {row.original?.video_url ? (
+              <Link to={row.original?.video_url} target="_blank">
+                {row.original?.video_url}
+              </Link>
+            ) : (
+              "-"
+            )}
+          </>
+        ),
       },
       {
         header: "Действия",
@@ -116,7 +100,7 @@ export const Lessons = () => {
           <Flex gap={10}>
             <IconEdit
               onClick={() => {
-                setSelectedLesson(row.original);
+                setSelectedSublesson(row.original);
                 setEditModal(true);
               }}
             />
@@ -156,7 +140,7 @@ export const Lessons = () => {
       return (
         <div style={{ display: "flex", gap: "8px" }}>
           <Button onClick={() => openModal()} variant="filled">
-            {t("lessons.lessonCreate")}
+            Создать тему
           </Button>
         </div>
       );
@@ -165,16 +149,16 @@ export const Lessons = () => {
   return (
     <>
       <MantineReactTable table={table} />
-      <AddLessonModal
+      <AddSublessonModal
         open={modal}
         onClose={() => setModal(false)}
         setChanges={setChanges}
       />
-      <EditLessonModal
+      <EditSublessonModal
         open={editModal}
         onClose={() => setEditModal(false)}
         setChanges={setChanges}
-        lesson={selectedLesson}
+        sublesson={selectedSublesson}
       />
     </>
   );
