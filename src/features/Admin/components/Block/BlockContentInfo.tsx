@@ -10,7 +10,7 @@ import { MRT_Localization_RU } from "mantine-react-table/locales/ru";
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IconTrashFilled } from "@tabler/icons-react";
 import { AddLessonModal } from "../AddLessonModal";
 import { AddTestModal } from "../AddTestModal";
