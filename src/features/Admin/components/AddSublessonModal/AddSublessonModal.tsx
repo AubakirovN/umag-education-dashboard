@@ -24,12 +24,14 @@ export const AddSublessonModal = ({
   const { id } = useParams();
   const { t } = useTranslation();
   const [search, setSearch] = useState<string>("");
-  const [lesson, setLesson] = useState();
+  const [lesson, setLesson] = useState<any>(null);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15,
   });
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log(id)
 
   const initialValues: any = {
     title: "",
@@ -66,6 +68,7 @@ export const AddSublessonModal = ({
 
   const close = () => {
     form.reset();
+    setLesson(null);
     onClose();
   };
 

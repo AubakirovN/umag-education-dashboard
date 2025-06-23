@@ -62,7 +62,7 @@ export const Tests = () => {
 
   useEffect(() => {
     getData();
-  }, [changes]);
+  }, [changes, pagination]);
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [

@@ -87,7 +87,7 @@ export const Users = () => {
 
   useEffect(() => {
     getData();
-  }, [changes]);
+  }, [changes, pagination]);
 
   return (
     <>

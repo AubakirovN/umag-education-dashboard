@@ -61,7 +61,7 @@ export const BlockContentInfo = () => {
 
   useEffect(() => {
     getData();
-  }, [changes]);
+  }, [changes, pagination]);
 
   const columns = useMemo<MRT_ColumnDef<any>[]>(
     () => [
