@@ -1,11 +1,7 @@
 import { LoadingBlock } from "@/components/AppLayout/components/LoadingBlock";
 import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import {
-  editBlock,
-  getCourseBlockById,
-  getCourses,
-} from "@/core/api";
+import { editBlock, getCourseBlockById, getCourses } from "@/core/api";
 import { Box, Button, Flex, Grid, Text, TextInput } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { MRT_PaginationState } from "mantine-react-table";
@@ -140,15 +136,26 @@ export const EditBlockModal = ({
   };
 
   const setForm = (selectedBlock: any) => {
+    const coursesData = selectedBlock?.courses?.map((course: any) => ({
+      course_id: course?.pivot?.course_id || "",
+      block_number: course?.pivot?.block_number || 0,
+      max_attempts: course?.pivot?.max_attempts || 0,
+      pass_count: course?.pivot?.pass_count || 0,
+    }));
     form.setValues({
       title: selectedBlock?.title || "",
       description: selectedBlock?.description,
-      course_data: selectedBlock?.courses?.map((course: any) => ({
-        course_id: course?.pivot?.course_id || "",
-        block_number: course?.pivot?.block_number || 0,
-        max_attempts: course?.pivot?.max_attempts || 0,
-        pass_count: course?.pivot?.pass_count || 0,
-      })),
+      course_data:
+        coursesData?.length > 0
+          ? coursesData
+          : [
+              {
+                course_id: null,
+                block_number: 0,
+                max_attempts: 0,
+                pass_count: 0,
+              },
+            ],
     });
     setCourses(
       selectedBlock?.courses?.map((item: any) => ({
