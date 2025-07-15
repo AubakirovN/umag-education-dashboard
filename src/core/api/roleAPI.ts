@@ -1,7 +1,7 @@
 import axios from "axios";
 import { baseUrl } from "../constant";
 
-export const getRoles = async (params: any): Promise<any> => {
+export const getRoles = async (params?: any): Promise<any> => {
   const response = await axios.get<any>(`${baseUrl}/roles`, { params });
   return response.data;
 };

@@ -1,7 +1,10 @@
+import { AsyncSelect } from "@/components/AsyncSelect";
 import { CustomModal } from "@/components/CustomModal";
-import { addUser } from "@/core/api";
-import { Button, Group, InputBase, TextInput } from "@mantine/core";
+import { addUser, getRoles } from "@/core/api";
+import { Button, Group, InputBase } from "@mantine/core";
 import { useForm } from "@mantine/form";
+import { MRT_PaginationState } from "mantine-react-table";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IMaskInput } from "react-imask";
 
@@ -13,19 +16,28 @@ interface IAddUserModal {
 
 export const AddUserModal = ({ modal, onClose, setChanges }: IAddUserModal) => {
   const { t } = useTranslation();
+
+  const [roles, setRoles] = useState([]);
+  const [search, setSearch] = useState<string>("");
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15,
+  });
+
   const close = () => {
+    setRoles([]);
     form.reset();
     onClose();
   };
   const initialUserValues: any = {
     phone: "",
-    role: "",
+    role_id: "",
   };
   const form = useForm({
     initialValues: initialUserValues,
     validateInputOnBlur: true,
     validate: {
-      role: (value) => {
+      role_id: (value) => {
         if (value.length < 1) {
           return t("form.validate.required");
         } else if (value.length > 100) {
@@ -66,6 +78,40 @@ export const AddUserModal = ({ modal, onClose, setChanges }: IAddUserModal) => {
     }
   };
 
+  const loadOptions = async () => {
+    const params = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+      search: search,
+    };
+    setPagination({ ...pagination, pageIndex: pagination.pageIndex + 1 });
+    const roles = await getRoles(params);
+    return {
+      options:
+        roles?.data?.map((item: any) => ({
+          value: item.id,
+          label: item.name,
+        })) ?? [],
+      hasMore: roles?.current_page < roles?.last_page ? true : false,
+    };
+  };
+
+  const handleSearchChange = (inputValue: string) => {
+    if (inputValue === "" && search?.length === 1) {
+      setSearch("");
+      setPagination({ ...pagination, pageIndex: 0 });
+    } else {
+      setPagination({ ...pagination, pageIndex: 0 });
+      setSearch(inputValue);
+    }
+  };
+
+  const handleRolesChange = (option: any) => {
+    console.log(option);
+    form.setFieldValue("role_id", option?.value);
+    setRoles(option);
+  };
+
   return (
     <CustomModal
       onClose={close}
@@ -73,10 +119,18 @@ export const AddUserModal = ({ modal, onClose, setChanges }: IAddUserModal) => {
       opened={modal}
     >
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          label={t("users.addModal.role")}
-          placeholder={t("users.addModal.chooseRole")}
-          {...form.getInputProps("role")}
+        <AsyncSelect
+          w="100%"
+          mah={150}
+          value={roles}
+          error={form.errors.role_id}
+          label="Роль"
+          placeholder="Выберите роль"
+          search={search}
+          isClearable
+          onChange={handleRolesChange}
+          loadOptions={loadOptions}
+          handleSearchChange={handleSearchChange}
         />
         <InputBase
           label={t("users.addModal.phone")}
