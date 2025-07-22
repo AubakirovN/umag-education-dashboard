@@ -62,9 +62,6 @@ export const AddUserModal = ({ modal, onClose, setChanges }: IAddUserModal) => {
 
   const handleNumber = (value: string) => {
     form.setFieldValue("phone", value);
-    if (value.length <= 4) {
-      form.setFieldValue("phone", "");
-    }
   };
 
   const handleSubmit = async (values: any) => {
@@ -135,9 +132,7 @@ export const AddUserModal = ({ modal, onClose, setChanges }: IAddUserModal) => {
         <InputBase
           label={t("users.addModal.phone")}
           {...form.getInputProps("phone")}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleNumber(e.target.value)
-          }
+          onAccept={(value: string) => handleNumber(value)} // <-- важно
           component={IMaskInput}
           error={form.errors.phone}
           placeholder="+7 (XXX) XXX-XXXX"

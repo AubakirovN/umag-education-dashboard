@@ -71,9 +71,6 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   const handleNumber = (value: string) => {
     form.setFieldValue("phone", value);
-    if (value?.length <= 4) {
-      form.setFieldValue("phone", "");
-    }
   };
 
   return (
@@ -97,9 +94,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       <InputBase
         label={t("loginForm.phone")}
         {...form.getInputProps("phone")}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          handleNumber(e.target.value)
-        }
+        onAccept={(value: string) => handleNumber(value)} // <-- важно
         component={IMaskInput}
         placeholder="+7 (XXX) XXX-XXXX"
         mask="+7 (000) 000-0000"
